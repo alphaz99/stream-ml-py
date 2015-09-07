@@ -2,15 +2,13 @@ if __name__ == '__main__':
     if __package__ is None:
         import sys
         from os import path
-        sys.path.append( path.dirname( path.dirname( path.abspath(__file__) ) ) )
+        sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 
-from Stream import Stream, _no_value
-from Operators import stream_func
+from Stream import Stream
 from Framework import Stream_Learn
 from Framework import KMeans
 from Framework.KMeans import kmeans
-
 import numpy as np
 
 # Parameters
@@ -26,11 +24,8 @@ num_points = 15000
 if __name__ == "__main__":
 
     i = 0
-
     centroids = kmeans.initialize(num_centroids)
-
-    m = KMeans.KMeans(draw = draw, output = output, k = k)
-
+    m = KMeans.KMeans(draw=draw, output=output, k=k)
     x = Stream('x')
 
     model = Stream_Learn(x, x, m.train, m.predict, k, window_size, 1, 2)
@@ -38,9 +33,10 @@ if __name__ == "__main__":
 
     while i < num_points:
         index = np.random.randint(0, num_centroids)
-        z = np.random.rand(1,2) * 2 - 1
-        centroids[index] = centroids[index].reshape(1,2) +  z * 2
-        x.extend([tuple(kmeans.initializeDataCenter(centroids[index], 1, 1).tolist()[0])])
+        z = np.random.rand(1, 2) * 2 - 1
+        centroids[index] = centroids[index].reshape(1, 2) + z * 2
+        x.extend([tuple(kmeans.initializeDataCenter(centroids[index],
+                                                    1, 1).tolist()[0])])
         print i
         i += 1
 
