@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+<head>
+<title> STREAMS AND AGENTS</title>
+</head>
+
+<body>
+<h1>
+STREAMS AND AGENTS
+</h1>
+
+<p> <strong>Introduction to Streams and Agents: </strong> A
+<em>stream</em> is a sequence of values.  An object that carries out
+computation on a stream is called an <em>agent</em>. An agent can
+modify a stream only by appending values to the end of the stream. An
+agent appends a value <code>v</code> to a stream <code>s</code> by
+calling <code>s.append(v)</code>. Arbitrary numbers of agents can
+append values to a stream and read a stream.  </p>
+
+The values in a stream can be of arbitrary types. A stream is similar
+to a list. An agent can read the k-th value of a stream for k =
+0, ..., stream-length - 1. Most agents access values in a stream in
+increasing order of index.
+
+
+
+<p> <strong>Pages: </strong> Associated with a stream <code>s</code>
+are attributes <code>len</code>, <code>page</code>,
+<code>win_end</code> and <code>win_len</code> where:
+
+<ol>
+  <li>
+   <code>s.len</code> is the number of values that have been appended
+   to the stream. So, <code>s.len</code> is the length or size of
+   stream <code>s</code>.
+  </li>
+  <li>
+  <code>s.win_len</code> is a parameter set by the creator of stream
+  <code>s</code>. It is a positive integer and is the length
+  of the window into the stream.
+  </li>
+  <li>
+  <code>s.page</code> is a list which is a slice of stream
+  <code>s</code>. The contents of this list are described later.
+  </li>
+  <li>
+  <code>s.win_end</code> is an index in <code>s.page</code> and it
+  refers to the end of the window into <code>s.page</code>.
+  </li>
+</ol>
+
+If <code>s.len < s.win_len</code> then:
+
+<br>
+
+<code>s.win_end = s.len</code>, and agents can read the list
+<code>s.page[0 : s.win_end]</code>. 
+
+<br>
+
+If <code>s.len >= s.win_len</code> then:
+
+<br>
+
+<code>s.win_end >= s.win_len</code>, and agents can read the list
+<code>s.page[s.win_end - s.win_len : s.win_end]</code>.
+</p>
+
+
+<p>
+<strong>Subscribers: </strong> An agent that reads a
+stream is called a <em>subscriber</em> to that stream. An
+agent can subscribe to an arbitrary number of streams. An agent
+subscribes for a stream <code>s</code> by
+executing
+<br>
+<code>s.subscribe(self)</code>.
+<br>
+When a new value is appended to stream <code>s</code>, the
+stream executes:
+<br>
+<code>x.new_value_in_stream(s)</code>,
+</br>
+for each subscriber <code>x</code> of the stream.
+
+<h2>Simple Examples</h2>
+<h3>PrintStreamAgent</h3>
+A simple example of an agent is PrintStreamAgent which subscribes to a
+single stream and prints the values that are appended to this
+stream. This agent does not append values to any stream. So, this
+agent has a single "input," i.e., the stream it reads, and has no
+output. When this agent is invoked with:
+<br>
+<code>new_value_in_stream(stream)</code>
+</br>
+it prints: <code>stream.page[stream.win_end - 1]</code> because
+<code>stream.win_end -1 </code> is the index in
+<code>stream.page</code> of the last value that was appended to the
+stream. 
+<h3>MapStreamAgent</h3>
+Another simple example of an agent is MapStreamAgent which subscribes to a
+single stream, maps the values appended to this stream using a map
+function, and appends the result on an output stream. This
+agent has a single input and single output stream. When this agent is invoked with:
+<br>
+<code>new_value_in_stream(stream)</code>
+</br>
+it applies the map function to : <code>stream.page[stream.win_end - 1]</code>
+and appends the result to the output stream.
+
+<h2>Agents that Operate on Moving Windows</h2>
+An agent can operate on a moving window of a stream provided that the
+length of the agent's moving window does not exceed the stream
+attribute win_len_max.
+
+<h3>WinMaxAgent</h3>
+<p>
+
+This agent has a single input stream and a single output stream. One
+of the parameters of this agent is the size of this agent's window
+into its input stream. The agent computes the maximum value in the
+agent's moving window when a new value is appended to the input
+stream, and appends this maximum value to the agent's output
+stream.
+
+</p>
+
+<p>
+
+Suppose the input stream has values 50, 49, 52, 31, 20, 19, 60 appended to
+it in that order, i.e., 50 first, then 49, then 52,... Assume that
+<code>size</code>, the length of the WinMaxAgent's window is 3. Then
+the output stream will have the following values appended to it in
+order: None, None, 52, 52, 52, 31, 60...
+</p>
+
+<p>The first two values are None because the stream doesn't have
+enough (i.e., <code>size</code>) values to carry out a
+computation. The agent carries out its first computation on the list
+slice [50, 49, 52], and returns 52, which it appends to its output
+stream. It carries out its next computation on the list [49, 52, 31],
+and returns 52 which it appends to its output stream. The agent then
+operates on lists [52, 31, 20], [31, 20, 19], and [20, 19, 60] and
+appends 52, 31, and 60 to its output lists.
+</p>
+
+<p> Consider the computation that needs to be carried out when the
+list changes from [50, 49, 52] to [49, 52, 31]. A new value, 31, is
+added to the list and a value, 52, is removed from the list. Since the
+value (31) added to the list, and the value (50) removed from the list
+do not exceed the previous max (52), the max does not change. For the
+same reason, the max doesn't change when the list changes from [49,
+52, 31] to [52, 31, 20].
+</p>
+
+<p> When the list changes from [52, 31, 20] to [31, 20, 19] the max is
+recomputed because the value (19) added to the list is less than the
+max of the previous window, and the value (52) removed from the list
+is equal to the value of the previous window.
+</p>
+
+<p>
+This agent also has a parameter <code>start_position</code> which is
+the value of <code>input_stream.win_end</code> at which the agent
+starts carrying out computations. If this parameter is not specified,
+then its default value is <code>size</code>, the length of the agent's
+moving window.
+</p>
+
+<h2>Structure of Window Agents</h2>
+Window agents execute code with three parts (one of which is to return
+without doing anything) in response to
+<code>new_value_in_stream(self, stream):</code>
+<ol>
+  <li>
+  If <code>stream.win_end < self.start_position</code>:
+  return without doing anything because the stream doesn't have enough
+  values for a calculation on windows.
+  </li>
+  <li>
+  If <code>stream.win_end == self.start_position</code>:
+  Carry out the step at the start position; this is the
+  <em>initial</em> computational step.
+  </li>
+  <li>
+  If <code>stream.win_end > self.start_position</code>:
+  Carry out a step after the start position; this is a
+  <em>continuing</em> computational step.
+  </li>
+</ol>
+
+<h3>WinMinAgent</h3>
+See the description of WinMaxAgent.
+
+<h3>WinMeanSigmaAgent</h3>
+These agents keep track of the sum of values in the agent's window and
+the sum of the square of values in the window.
+<ol>
+  <li>
+  If <code>stream.win_end == self.start_position</code>: Compute the
+  sums of values and values squared.
+  </li>
+  <li>
+  If <code>stream.win_end > self.start_position</code>: Update the
+  sums by subtracting the value that drops out of the agent's window
+  and adding the value that enters the window.
+  </li>
+</ol>
+The mean and sigma (standard deviation) are computed from the sums of
+values and values squared. 
+
+<hr>
+<address></address>
+<!-- hhmts start -->Last modified: Fri May  9 15:30:48 PDT 2014 <!-- hhmts end -->
+</body> </html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Agent module &mdash; PSTREAMS  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PSTREAMS  documentation" href="index.html" />
+    <link rel="next" title="ClockAgent module" href="ClockAgent.html" />
+    <link rel="prev" title="Welcome to STREAMS’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ClockAgent.html" title="ClockAgent module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to STREAMS’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PSTREAMS  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-Agent">
+<span id="agent-module"></span><h1>Agent module<a class="headerlink" href="#module-Agent" title="Permalink to this headline">¶</a></h1>
+<p>This module contains the Agent class. The Agent
+and Stream classes are the building blocks of
+PythonStreams.</p>
+<dl class="class">
+<dt id="Agent.Agent">
+<em class="property">class </em><tt class="descclassname">Agent.</tt><tt class="descname">Agent</tt><big>(</big><em>in_streams</em>, <em>out_streams</em>, <em>transition</em>, <em>state=None</em>, <em>call_streams=None</em>, <em>stream_manager=None</em>, <em>name=None</em><big>)</big><a class="reference internal" href="_modules/Agent.html#Agent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Agent.Agent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>An agent is an automaton: a state-transition machine.
+An agent is initialized in __init__ and a state
+transition is executed by next().</p>
+<p>An agent has lists of input streams, output streams
+and call streams. Streams are described in Stream.py.</p>
+<p>During a state transition an agent may read values from
+its input streams, append values to its output streams,
+change its state and carry out operations on other objects.</p>
+<p>When a call stream is modified the agent&#8217;s next() method
+is called which causes the agent to execute a state transition.</p>
+<p>The default is that every input stream is also a call stream,
+i.e., the agent executes a state transition when any of its
+input streams is modified. For performance reasons, we
+may not want the agent to execute state transitions when some
+input streams are modified; in this case, the sets of call
+and input streams will be different.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>in_streams</strong> : list of streams</p>
+<p><strong>out_streams</strong> : list of streams</p>
+<p><strong>call_streams</strong> : list of streams</p>
+<blockquote>
+<div><p>When a new value is added to a stream in this list
+a state transition is invoked.
+This the usual way (but not the only way) in which
+state transitions occur.</p>
+</div></blockquote>
+<p><strong>state: object</strong></p>
+<blockquote>
+<div><p>The state of the agent. The state is updated after
+a transition.</p>
+</div></blockquote>
+<p><strong>transition: function</strong></p>
+<blockquote>
+<div><p>This function is called by next() which
+is the state-transition operation for this agent.
+An agent&#8217;s state transition is specified by
+its transition function.</p>
+</div></blockquote>
+<p><strong>stream_manager</strong> : function</p>
+<blockquote>
+<div><p>Each stream has management variables, such as whether
+the stream is open or closed. After a state-transition
+the agent executes the stream_manager function
+to modify the management variables of the agent&#8217;s output
+and call streams.</p>
+</div></blockquote>
+<p><strong>name</strong> : str, optional</p>
+<blockquote class="last">
+<div><p>name of this agent</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="12%" />
+<col width="88%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>_in_lists: list of InList</td>
+<td>InList defines the slice of a list. The j-th element of _in_lists is an InList that defines the slice of the j-th input stream that may be read by this agent in a state transition.</td>
+</tr>
+<tr class="row-even"><td>_out_lists: list</td>
+<td>The j-th element of the list is the list of values to be appended to the j-th output stream after the state transition.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="6%" />
+<col width="94%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>next(stream_name=None)</td>
+<td>Execute a state transition. The method has 3 parts: (i) set up the data structures to execute a state transition, (ii) call transition to: (a) get the values to be appended to output streams, (b) get the next state, and (c) update pointers into input streams identifying what parts of the stream may be read in the future. (iii) update data structures after the transition.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="Agent.Agent.next">
+<tt class="descname">next</tt><big>(</big><em>stream_name=None</em><big>)</big><a class="reference internal" href="_modules/Agent.html#Agent.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Agent.Agent.next" title="Permalink to this definition">¶</a></dt>
+<dd><p>Execute the next state transition.</p>
+<p>This function does the following:
+Part 1: set up data structures for the state transition.
+Part 2: execute the state transition by calling self.transition
+Part 3: update data structures after the transition.</p>
+<p>This method can be called by any agent and is
+called whenever a value is appended to any
+stream in call_streams</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>stream_name</strong> : str, optional</p>
+<blockquote class="last">
+<div><p>A new value was appended to the stream with name
+stream_name as a result of which this agent
+executes a state transition.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Agent.InList">
+<em class="property">class </em><tt class="descclassname">Agent.</tt><tt class="descname">InList</tt><a class="headerlink" href="#Agent.InList" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p class="rubric">Attributes</p>
+<p class="rubric">Methods</p>
+<dl class="attribute">
+<dt id="Agent.InList.list">
+<tt class="descname">list</tt><a class="headerlink" href="#Agent.InList.list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Agent.InList.start">
+<tt class="descname">start</tt><a class="headerlink" href="#Agent.InList.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Agent.InList.stop">
+<tt class="descname">stop</tt><a class="headerlink" href="#Agent.InList.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to STREAMS&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ClockAgent.html"
+                        title="next chapter">ClockAgent module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Agent.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ClockAgent.html" title="ClockAgent module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to STREAMS’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">PSTREAMS  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Author.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

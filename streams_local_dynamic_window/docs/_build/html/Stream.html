@@ -1,0 +1,405 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Stream module &mdash; PSTREAMS  documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PSTREAMS  documentation" href="index.html" />
+    <link rel="next" title="Stream_Learn module" href="Stream_Learn.html" />
+    <link rel="prev" title="PrintFunctions module" href="PrintFunctions.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Stream_Learn.html" title="Stream_Learn module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PrintFunctions.html" title="PrintFunctions module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">PSTREAMS  documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-Stream">
+<span id="stream-module"></span><h1>Stream module<a class="headerlink" href="#module-Stream" title="Permalink to this headline">¶</a></h1>
+<p>This module contains the Stream class. The
+Stream and Agent classes are the building blocks
+of PythonStreams.</p>
+<dl class="class">
+<dt id="Stream.Stream">
+<em class="property">class </em><tt class="descclassname">Stream.</tt><tt class="descname">Stream</tt><big>(</big><em>name='No Name'</em>, <em>proc_name='Unkown Process'</em><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">object</span></tt></p>
+<p>A stream is a sequence of values. Agents can:
+(1) Append values to the tail of stream. 
+(2) Read a stream.
+(3) Subscribe to be notified when a
+value is added to a stream.</p>
+<p>The ONLY way in which a stream can be
+modified is that values can be appended to its
+tail. The length of a stream (number of elements
+in its sequence) can stay the same or increase,
+but never decreases. If at some point, the length
+of a stream is k, then from that point onwards, the
+first k elements of the stream remain unchanged.</p>
+<p>A stream is written by only one agent. Any
+number of agents can read a stream, and any
+number of agents can subscribe to a stream.
+An agent can be a reader and a subscriber and
+a writer of the same stream.</p>
+<p>If agent x is a subscriber to a stream s then
+x.next() &#8212; a state transition of x &#8212; is
+invoked whenever s is modified.</p>
+<p>READING A STREAM
+An agent can read a stream only after it registers
+with the stream as a reader. An agents r registers
+with a stream s by executing s.reader(r).</p>
+<p>After a reader of a stream s reads the first k
+values s, the reader may determine that from that
+point onwards, it will no longer read the
+first j values of the stream for some j where
+j &lt;= k.
+A reader r of a stream s can inform s at a point
+in the computation that from that point onwards
+r will no longer read the first j values of the
+stream, for some j. Stream s uses this information
+to manage its memory.</p>
+<p>Associated with each stream s is a list s.recent
+which consists of the most recent elements of s.
+s.recent is a tailing subsequence (or suffix) of
+s.
+If the value of s is a sequence s[0], ..., s[n-1],
+at a point in a computation then at that point,
+s.recent is a list s[m], .., s[n-1] for some m.</p>
+<p>The length of s.recent is large enough so that at
+each point in a computation, all readers of stream
+s only read elements of s that are in s.recent. 
+Operations on streams are implemented as operations
+on lists. A reader reads a stream s by reading the
+list s.recent.</p>
+<p>Associated with a reader r of stream s is an
+integer s.start[r]. Reader r can only read the slice
+s.recent[s.start[r] : ] of the list recent.
+Reader r informs stream s that it will only
+read values in the list recent with indexes
+greater than or equal to j by calling</p>
+<blockquote>
+<div>s.set_start(r, j)</div></blockquote>
+<p>which causes s.start[r] to be set to j.</p>
+<p>For readers r1 and r2 of a stream s the values
+s.start[r1] and s.start[r2] may be different.</p>
+<p>WRITING A STREAM
+An agent adds elements to a stream s by calling
+s.append(value) or s.extend(value_list); these
+operations are similar to operations on lists.
+s.append(value) appends the single value to the
+tail of the list and s.extend(value_list) extends
+the stream by the sequence of values in the list
+value_list.</p>
+<p>SUBSCRIBE TO BE CALLED WHEN A STREAM IS MODIFIED
+An agent x subscribes to a stream s by executing</p>
+<blockquote>
+<div>s.call(x).</div></blockquote>
+<p>Then, when stream s is modified, s calls x.next(s)
+where next() executes a state-transition.
+An agent x unsubscribe from a stream s by executing</p>
+<blockquote>
+<div>s.delete_caller(x)</div></blockquote>
+<p>CLOSING A STREAM
+A stream can be closed or open (i.e., not closed).
+Initially a stream is open. The agent that writes a
+stream s can close s by executing s.close().
+A closed stream cannot be modified.</p>
+<p>Associated with a stream s is:
+(1) a list, s.recent. 
+(2) a nonnegative integer s.stop  where:</p>
+<blockquote>
+<div>(a) the slice s.recent[:s.stop] contains
+the most recent values of stream s, and
+(b) the slice s.recent[s.stop:] is
+padded with padding values (either 0 or 0.0).</div></blockquote>
+<ol class="arabic" start="3">
+<li><dl class="first docutils">
+<dt>a nonnegative integer s.offset where</dt>
+<dd><dl class="first last docutils">
+<dt>recent[i] = stream[i + offset]</dt>
+<dd><p class="first last">for 0 &lt;= i &lt; s.stop</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</li>
+</ol>
+<p>For example, if the stream s consists of range(950),
+i.e., 0, 1, .., 949, and s.offset is 900, then
+s.recent[i] = s[900+i] for i in range(50).</p>
+<p>Note that the number of entries in stream s is:
+s.offset + s.stop</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>name: str (optional)</strong></p>
+<blockquote class="last">
+<div><p>name of the stream. Though the name is optional
+a named stream helps with debugging.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>recent: list</td>
+<td>A list of the most recent values of the stream.</td>
+</tr>
+<tr class="row-even"><td>stop:   index into the list recent.</td>
+<td>s.recent[:s.stop] contains the s.stop most recent values of stream s. s.recent[s.stop:] contains padded values.</td>
+</tr>
+<tr class="row-odd"><td>offset: index into the stream.</td>
+<td>For a stream s: s.recent[i] = s[i + offset] for i in range(s.stop)</td>
+</tr>
+<tr class="row-even"><td>start: dict of readers.</td>
+<td>key = reader value = start index of the reader Reader r can read the slide recent[start[r] : ]</td>
+</tr>
+<tr class="row-odd"><td>subscribers_set: set</td>
+<td>the set of subscribers for this stream, agents to be notified when an element is added to the stream.</td>
+</tr>
+<tr class="row-even"><td>closed: boolean</td>
+<td>True if and only if the stream is closed. A closed stream is not modified.</td>
+</tr>
+<tr class="row-odd"><td>_buffer_size: nonnegative integer</td>
+<td>Used to manage the recent list.</td>
+</tr>
+<tr class="row-even"><td>_begin: index into the list recent</td>
+<td>recent[_begin:] mqy be read by some reader. recent[:_begin] is not being accessed by any reader; therefore recent[:_begin] can be safely deleted.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="Stream.Stream.append">
+<tt class="descname">append</tt><big>(</big><em>value</em><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream.append"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Append a single value to the end of the
+stream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Stream.Stream.call">
+<tt class="descname">call</tt><big>(</big><em>agent</em><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream.call"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream.call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a subscriber for this stream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Stream.Stream.close">
+<tt class="descname">close</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close this stream.&#8221;</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Stream.Stream.delete_caller">
+<tt class="descname">delete_caller</tt><big>(</big><em>agent</em><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream.delete_caller"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream.delete_caller" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete a subscriber for this stream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Stream.Stream.delete_reader">
+<tt class="descname">delete_reader</tt><big>(</big><em>reader</em><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream.delete_reader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream.delete_reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete this reader from this stream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Stream.Stream.extend">
+<tt class="descname">extend</tt><big>(</big><em>value_list</em><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream.extend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream.extend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extend the stream by the list of values, value_list.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value_list: list</strong></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="Stream.Stream.print_recent">
+<tt class="descname">print_recent</tt><big>(</big><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream.print_recent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream.print_recent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Stream.Stream.reader">
+<tt class="descname">reader</tt><big>(</big><em>reader</em>, <em>start=0</em><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream.reader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream.reader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register a reader.</p>
+<p>The newly registered reader starts reading list recent
+from index start, i.e., reads the slice
+recent[start:s.stop]
+If reader has already been registered with this stream
+its start value is updated to the parameter in the call.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="Stream.Stream.set_name">
+<tt class="descname">set_name</tt><big>(</big><em>name</em><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream.set_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream.set_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="Stream.Stream.set_start">
+<tt class="descname">set_start</tt><big>(</big><em>reader</em>, <em>start</em><big>)</big><a class="reference internal" href="_modules/Stream.html#Stream.set_start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.Stream.set_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>The reader tells the stream that it is only accessing
+elements of the list recent with index start or higher.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Stream.StreamArray">
+<em class="property">class </em><tt class="descclassname">Stream.</tt><tt class="descname">StreamArray</tt><big>(</big><em>name=None</em><big>)</big><a class="reference internal" href="_modules/Stream.html#StreamArray"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.StreamArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Stream.Stream" title="Stream.Stream"><tt class="xref py py-class docutils literal"><span class="pre">Stream.Stream</span></tt></a></p>
+<p class="rubric">Methods</p>
+<dl class="method">
+<dt id="Stream.StreamArray.extend">
+<tt class="descname">extend</tt><big>(</big><em>a</em><big>)</big><a class="reference internal" href="_modules/Stream.html#StreamArray.extend"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.StreamArray.extend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extend the stream by an numpy ndarray.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>a: np.ndarray or list</strong></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="Stream.StreamSeries">
+<em class="property">class </em><tt class="descclassname">Stream.</tt><tt class="descname">StreamSeries</tt><big>(</big><em>name=None</em><big>)</big><a class="reference internal" href="_modules/Stream.html#StreamSeries"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.StreamSeries" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Stream.Stream" title="Stream.Stream"><tt class="xref py py-class docutils literal"><span class="pre">Stream.Stream</span></tt></a></p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="Stream.StreamTimed">
+<em class="property">class </em><tt class="descclassname">Stream.</tt><tt class="descname">StreamTimed</tt><big>(</big><em>name=None</em><big>)</big><a class="reference internal" href="_modules/Stream.html#StreamTimed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#Stream.StreamTimed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Stream.Stream" title="Stream.Stream"><tt class="xref py py-class docutils literal"><span class="pre">Stream.Stream</span></tt></a></p>
+<p class="rubric">Methods</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="Stream.TimeAndValue">
+<em class="property">class </em><tt class="descclassname">Stream.</tt><tt class="descname">TimeAndValue</tt><a class="headerlink" href="#Stream.TimeAndValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <tt class="xref py py-class docutils literal"><span class="pre">tuple</span></tt></p>
+<p class="rubric">Attributes</p>
+<p class="rubric">Methods</p>
+<dl class="attribute">
+<dt id="Stream.TimeAndValue.time">
+<tt class="descname">time</tt><a class="headerlink" href="#Stream.TimeAndValue.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="Stream.TimeAndValue.value">
+<tt class="descname">value</tt><a class="headerlink" href="#Stream.TimeAndValue.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="PrintFunctions.html"
+                        title="previous chapter">PrintFunctions module</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="Stream_Learn.html"
+                        title="next chapter">Stream_Learn module</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/Stream.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Stream_Learn.html" title="Stream_Learn module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="PrintFunctions.html" title="PrintFunctions module"
+             >previous</a> |</li>
+        <li><a href="index.html">PSTREAMS  documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Author.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
