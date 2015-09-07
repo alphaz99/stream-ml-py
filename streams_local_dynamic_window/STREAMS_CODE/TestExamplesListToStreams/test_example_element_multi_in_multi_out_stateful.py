@@ -21,7 +21,7 @@ from stream_test import *
 
 
 # Functions: list, state -> list, state
-delta = 0.5 
+delta = 0.5
 def inrange_and_outlier(x_and_y, state):
     x, y = x_and_y
     a, b, n, x_sum, y_sum, xx_sum, xy_sum = state
@@ -69,7 +69,7 @@ def test():
     x = Stream('input_0')
     y = Stream('input_1')
 
-    
+
     inrange_stream, outlier_stream = inrange_and_outlier_streams([x,y])
 
     # Give names to streams u, v, and w. This is helpful in reading output.
@@ -97,7 +97,7 @@ def test():
     # Add more values to the tail of stream x.
     x_list = range(15, 20, 1)
     y_list = [10*v for v in x_list]
-    
+
     x.extend(x_list)
     y.extend(y_list)
 
@@ -119,4 +119,3 @@ def test():
 
 if __name__ == '__main__':
     test()
-

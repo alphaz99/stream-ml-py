@@ -16,7 +16,8 @@ import numpy as np
 draw = True
 output = False
 num_features = 1
-window_size = 50
+min_window_size = 2
+max_window_size = 50
 num_points = 1000
 
 
@@ -40,8 +41,11 @@ if __name__ == "__main__":
     x = Stream('x')
 
     linear_regression.init_plot()
-    model = Stream_Learn(x, x, m.train, m.predict, 2, window_size, 1,
-                         num_features, all_func=all_func)
+    model = Stream_Learn(data_train=x, data_out=x, train_func=m.train,
+                         predict_func=m.predict,
+                         min_window_size=min_window_size,
+                         max_window_size=max_window_size, step_size=1,
+                         num_features=num_features, all_func=all_func)
     y = model.run()
 
     stream_func(inputs=y, f=print_stream, f_type='element', num_outputs=0)

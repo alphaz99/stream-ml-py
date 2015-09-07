@@ -17,7 +17,7 @@ draw = True
 output = True
 num_centroids = 5
 k = 5
-window_size = 1000
+max_window_size = 1000
 num_points = 15000
 
 
@@ -28,7 +28,10 @@ if __name__ == "__main__":
     m = KMeans.KMeans(draw=draw, output=output, k=k)
     x = Stream('x')
 
-    model = Stream_Learn(x, x, m.train, m.predict, k, window_size, 1, 2)
+    model = Stream_Learn(data_train=x, data_out=x, train_func=m.train,
+                         predict_func=m.predict, min_window_size=k,
+                         max_window_size=max_window_size, step_size=1,
+                         num_features=2)
     y = model.run()
 
     while i < num_points:
