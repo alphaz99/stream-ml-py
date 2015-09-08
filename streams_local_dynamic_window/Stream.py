@@ -13,6 +13,11 @@ from collections import namedtuple
 TimeAndValue = namedtuple('TimeAndValue', ['time', 'value'])
 _no_value = object
 
+class _multivalue(object):
+    def __init__(self, lst):
+        self.lst = lst
+        
+
 class Stream(object):
     """
     A stream is a sequence of values. Agents can:
@@ -157,7 +162,8 @@ class Stream(object):
             therefore recent[:_begin] can be safely deleted.
 
     """
-    def __init__(self, name="No Name", proc_name="Unkown Process"):
+    def __init__(self, name="No Name", proc_name="Unkown Process",
+                 initial_value=[]):
         self.name = name
         # Name of the process in which this stream lives.
         self.proc_name = proc_name
@@ -177,18 +183,22 @@ class Stream(object):
         self.subscribers_set = set()
         # Initially the stream is open
         self.closed = False
+        assert isinstance(initial_value, list)
+        if initial_value:
+            self.stop = len(initial_value)
+            self.recent[:self.stop] = initial_value
 
-    def reader(self, reader, start=0):
+    def reader(self, reader, start_index=0):
         """
         Register a reader.
 
         The newly registered reader starts reading list recent
         from index start, i.e., reads the slice
-        recent[start:s.stop]
+        recent[start_index:s.stop]
         If reader has already been registered with this stream
         its start value is updated to the parameter in the call.
         """
-        self.start[reader] = start
+        self.start[reader] = start_index
 
     def delete_reader(self, reader):
         """
@@ -213,11 +223,10 @@ class Stream(object):
         Append a single value to the end of the
         stream.
         """
-        if value == _no_value:
-            return
+        ## if value == _no_value:
+        ##     return
         if self.closed:
             raise Exception("Cannot write to a closed stream.")
-
         self.recent[self.stop] = value
         self.stop += 1
         # Inform subscribers that the stream has been
@@ -247,7 +256,7 @@ class Stream(object):
         if isinstance(value_list, np.ndarray):
             value_list = value_list.tolist()
 
-        value_list = [v for v in value_list if v != _no_value]
+        ## value_list = [v for v in value_list if v != _no_value]
         
         if len(value_list) == 0:
             return

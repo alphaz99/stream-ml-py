@@ -1,0 +1,308 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>STREAMS_CODE.Framework.Stream_Learn &mdash; stream-py  documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="stream-py  documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">stream-py  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for STREAMS_CODE.Framework.Stream_Learn</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">))))</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">Stream</span> <span class="kn">import</span> <span class="n">Stream</span><span class="p">,</span> <span class="n">_no_value</span>
+<span class="kn">from</span> <span class="nn">Operators</span> <span class="kn">import</span> <span class="n">stream_func</span><span class="p">,</span> <span class="n">dynamic_window_func</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="Stream_Learn"><a class="viewcode-back" href="../../../STREAMS_CODE.Framework.html#STREAMS_CODE.Framework.Stream_Learn.Stream_Learn">[docs]</a><span class="k">class</span> <span class="nc">Stream_Learn</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Stream framework for machine learning.</span>
+
+<span class="sd">    This class supports machine learning for streaming data using PSTREAMS.</span>
+<span class="sd">    Given data for training and predicting along with functions to learn and</span>
+<span class="sd">    predict, this class will output a stream of predictions. Both batch and</span>
+<span class="sd">    continual learning is supported.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    data_train : `Stream` or numpy.ndarray or other</span>
+<span class="sd">        A object containing data to be trained on. In the case of `Stream`, the</span>
+<span class="sd">        object contains tuples of values where each tuple represents a row of</span>
+<span class="sd">        data. Each tuple must have at least `num_features` values. The object</span>
+<span class="sd">        can also contain non-tuples provided `filter_func` is used to extract</span>
+<span class="sd">        the tuples in correct format.</span>
+<span class="sd">        In the case of a `numpy` array, the array must have at least</span>
+<span class="sd">        `num_features` columns.</span>
+<span class="sd">        Any additional values / columns correspond to the output y data.</span>
+<span class="sd">        If this is not a `Stream` or `numpy` array, the data will not be split</span>
+<span class="sd">        into x and y.</span>
+<span class="sd">    data_out : `Stream`</span>
+<span class="sd">        A `Stream` object containing data to generate predictions on.</span>
+<span class="sd">        The `Stream` contains tuples of values where each tuple represents a</span>
+<span class="sd">        row of data and must have at least `num_features` values.</span>
+<span class="sd">    train_func : function</span>
+<span class="sd">        &lt;pre&gt;A function that trains a model.</span>
+<span class="sd">        This function takes parameters x and y data, a model object, and a</span>
+<span class="sd">        window_state tuple, and returns a trained model object.</span>
+<span class="sd">        In the case of `data_train` as a `Stream`, this function has the</span>
+<span class="sd">        signature (numpy.ndarray numpy.ndarray Object) -&gt; (Object). The first</span>
+<span class="sd">        parameter x will have dimensions i x `num_features`, where</span>
+<span class="sd">        `min_window_size` &lt;= i &lt;= `max_window_size`. The second parameter y</span>
+<span class="sd">        will have dimensions i x num_outputs, where num_outputs refers to the</span>
+<span class="sd">        number of y outputs for an input. For example, num_outputs is 1 for 1</span>
+<span class="sd">        scalar output. For unsupervised learning, num_outputs is 0.</span>
+<span class="sd">        In the case of `data_train` as a `numpy` array, this function has the</span>
+<span class="sd">        signature (numpy.ndarray numpy.ndarray Object) -&gt; (Object). The first</span>
+<span class="sd">        parameter x will have dimensions N x `num_features`, where N refers to</span>
+<span class="sd">        the total number of training examples. The second parameter y will have</span>
+<span class="sd">        dimensions N x num_outputs where num_outputs is defined as before.</span>
+<span class="sd">        If `data_train` is none of the above, the function has the signature</span>
+<span class="sd">        (Object None Object) -&gt; (Object). The first parameter is `data_train`.</span>
+<span class="sd">        The third parameter is a model defined by this function.</span>
+<span class="sd">        The fourth parameter is a window_state tuple with the values</span>
+<span class="sd">        (current_window_size, steady_state, reset, `step_size`,</span>
+<span class="sd">        `max_window_size`),</span>
+<span class="sd">        where current_window_size describes the number of points in the window,</span>
+<span class="sd">        steady_state is a boolean that describes whether the window has reached</span>
+<span class="sd">        `max_window_size`, and reset is a boolean that can be set to True to</span>
+<span class="sd">        reset the window.&lt;/pre&gt;</span>
+<span class="sd">    predict_func : function</span>
+<span class="sd">        A function that takes as input 2 tuples corresponding to 1 row of data</span>
+<span class="sd">        and a model and returns the prediction output.</span>
+<span class="sd">        This function has the signature (tuple tuple Object) -&gt; (Object).</span>
+<span class="sd">        The first tuple x has `num_features` values and the second tuple y</span>
+<span class="sd">        has num_outputs values, where num_outputs refers to the number of y</span>
+<span class="sd">        outputs for an input. In the case of unsupervised learning, y is empty.</span>
+<span class="sd">    min_window_size : int</span>
+<span class="sd">        An int specifying the minimum size of the window to train on for</span>
+<span class="sd">        continual learning. This will be ignored for batch learning.</span>
+<span class="sd">    max_window_size : int</span>
+<span class="sd">        An int specifying the maximum size of the window to train on for</span>
+<span class="sd">        continual learning. This will be ignored for batch learning.</span>
+<span class="sd">    step_size : int</span>
+<span class="sd">        An int specifying the number of tuples to move the window by for</span>
+<span class="sd">        continual learning. This will be ignored for batch learning.</span>
+<span class="sd">    num_features : int</span>
+<span class="sd">        An int that describes the number of features in the data.</span>
+<span class="sd">    filter_func : function, optional</span>
+<span class="sd">        A function that filters data for training.</span>
+<span class="sd">        This function takes parameters x and y data and a model object, and</span>
+<span class="sd">        returns a tuple with signature (boolean, tuple). The first value in the</span>
+<span class="sd">        output describes if the data is to be trained on (True) or if it is an</span>
+<span class="sd">        outlier (False). The second value is the tuple of data in correct</span>
+<span class="sd">        format as described for `data_train`.</span>
+<span class="sd">        If `data_train` is a `Stream` that contains tuples, this function has</span>
+<span class="sd">        the signature (tuple tuple Object) -&gt; (tuple). The first tuple x has</span>
+<span class="sd">        `num_features` values and the second tuple y has num_outputs values,</span>
+<span class="sd">        where num_outputs refers to the number of y outputs for an input.</span>
+<span class="sd">        The third parameter is a model defined by `train_func`.</span>
+<span class="sd">        If `data_train` is a `Stream` that does not contain tuples, this</span>
+<span class="sd">        function has the signature (Object None Object) -&gt; (tuple), where</span>
+<span class="sd">        the first parameter has the same type as the values in `data_train`.</span>
+<span class="sd">    all_func : function, optional</span>
+<span class="sd">        A function that processes the data for usage such as visualization.</span>
+<span class="sd">        This function takes parameters x and y data, a model object, a state</span>
+<span class="sd">        object, and a window_state tuple and returns an updated state object.</span>
+<span class="sd">        This function has the signature</span>
+<span class="sd">        (np.ndarray np.ndarray Object Object tuple) -&gt; (Object).</span>
+<span class="sd">        The first numpy array x has dimensions i x `num_features`, where</span>
+<span class="sd">        `min_window_size` &lt;= i &lt;= `max_window_size`. The second numpy array y</span>
+<span class="sd">        has dimensions i x num_outputs, where num_outputs refers to the number</span>
+<span class="sd">        of y outputs for an input. The third parameter is the model object</span>
+<span class="sd">        defined by `train_func`. The fourth parameter is a state object defined</span>
+<span class="sd">        by this function. The fifth parameter is a window_state tuple with</span>
+<span class="sd">        values as defined in description for `train_func`.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_train</span><span class="p">,</span> <span class="n">data_out</span><span class="p">,</span> <span class="n">train_func</span><span class="p">,</span> <span class="n">predict_func</span><span class="p">,</span>
+                 <span class="n">min_window_size</span><span class="p">,</span> <span class="n">max_window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span>
+                 <span class="n">filter_func</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">all_func</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_train</span> <span class="o">=</span> <span class="n">data_train</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">data_out</span> <span class="o">=</span> <span class="n">data_out</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">train_func</span> <span class="o">=</span> <span class="n">train_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">predict_func</span> <span class="o">=</span> <span class="n">predict_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_window_size</span> <span class="o">=</span> <span class="n">min_window_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_window_size</span> <span class="o">=</span> <span class="n">max_window_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_size</span> <span class="o">=</span> <span class="n">step_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span> <span class="o">=</span> <span class="n">num_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filter_func</span> <span class="o">=</span> <span class="n">filter_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_func</span> <span class="o">=</span> <span class="n">all_func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window_state</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">step_size</span><span class="p">,</span>
+                             <span class="bp">self</span><span class="o">.</span><span class="n">max_window_size</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_train</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="s">&#39;x_train&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">None</span>
+
+    <span class="k">def</span> <span class="nf">_filter_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="p">[</span><span class="n">train_data</span><span class="p">,</span> <span class="n">data</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_func</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">]</span>
+                <span class="n">y</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">:]</span>
+                <span class="p">[</span><span class="n">train_data</span><span class="p">,</span> <span class="n">data</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">train_data</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">x_train</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x_train</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">n</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lst</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">state</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="bp">False</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">_no_value</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trained</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_func</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">n</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">:]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">predict_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_no_value</span>
+
+    <span class="k">def</span> <span class="nf">_all_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lst</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">_no_value</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_init_streams</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream_filter</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">stream_func</span><span class="p">,</span> <span class="n">f_type</span><span class="o">=</span><span class="s">&#39;element&#39;</span><span class="p">,</span>
+                                     <span class="n">f</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_filter_f</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream_train</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">dynamic_window_func</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_train</span><span class="p">,</span>
+                                    <span class="n">min_window_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_window_size</span><span class="p">,</span>
+                                    <span class="n">max_window_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_window_size</span><span class="p">,</span>
+                                    <span class="n">step_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">step_size</span><span class="p">,</span>
+                                    <span class="n">state</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">window_state</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream_predict</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">stream_func</span><span class="p">,</span> <span class="n">f_type</span><span class="o">=</span><span class="s">&#39;element&#39;</span><span class="p">,</span>
+                                      <span class="n">f</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_predict</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stream_all</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">dynamic_window_func</span><span class="p">,</span> <span class="n">f</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_all_f</span><span class="p">,</span>
+                                  <span class="n">min_window_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">min_window_size</span><span class="p">,</span>
+                                  <span class="n">max_window_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_window_size</span><span class="p">,</span>
+                                  <span class="n">step_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">step_size</span><span class="p">,</span>
+                                  <span class="n">state</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">])</span>
+
+<div class="viewcode-block" id="Stream_Learn.run"><a class="viewcode-back" href="../../../STREAMS_CODE.Framework.html#STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_streams</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="s">&#39;model&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="s">&#39;all&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">,</span> <span class="n">Stream</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stream_train</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x_train</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stream_all</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">]</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="n">y_predict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream_predict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">y_predict</span>
+</div>
+<div class="viewcode-block" id="Stream_Learn.reset"><a class="viewcode-back" href="../../../STREAMS_CODE.Framework.html#STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">window_state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">stream-py  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Author.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

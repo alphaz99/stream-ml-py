@@ -1,0 +1,805 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>STREAMS_CODE.ListOperators &mdash; stream-py  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="stream-py  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">stream-py  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for STREAMS_CODE.ListOperators</h1><div class="highlight"><pre>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">__package__</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="kn">from</span> <span class="nn">os</span> <span class="kn">import</span> <span class="n">path</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span> <span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span> <span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span> <span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">Agent</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c"># ASSERTIONS USED IN FILE</span>
+<div class="viewcode-block" id="assert_is_list_of_streams_or_None"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.assert_is_list_of_streams_or_None">[docs]</a><span class="k">def</span> <span class="nf">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">or</span> <span class="n">x</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">,</span>\
+      <span class="s">&#39;Expected {0} to be None or list or tuple.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">Stream</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">x</span><span class="p">),</span>\
+          <span class="s">&#39;Expected {0} to be a list (or tuple) of streams.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="assert_is_list_of_streams"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.assert_is_list_of_streams">[docs]</a><span class="k">def</span> <span class="nf">assert_is_list_of_streams</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span>\
+      <span class="s">&#39;Expected {0} to be a list or tuple&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">Stream</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">x</span><span class="p">),</span>\
+      <span class="s">&#39;Expected {0} to be a list (or tuple) of streams&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="assert_is_list_of_lists"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.assert_is_list_of_lists">[docs]</a><span class="k">def</span> <span class="nf">assert_is_list_of_lists</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">list_size</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">),</span>\
+      <span class="s">&#39;Expected {0} to be a list or tuple&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">x</span><span class="p">),</span>\
+      <span class="s">&#39;Expected {0} to be a list (or tuple) of lists&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">list_size</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">list_size</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> \
+      <span class="s">&#39;Expected len({0}) == {1}, or {1} to be None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">list_size</span><span class="p">)</span>
+    </div>
+<div class="viewcode-block" id="assert_is_list_or_None"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.assert_is_list_or_None">[docs]</a><span class="k">def</span> <span class="nf">assert_is_list_or_None</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="n">x</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">,</span> \
+      <span class="s">&#39;Expected {0} to be a list or None&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="assert_is_list"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.assert_is_list">[docs]</a><span class="k">def</span> <span class="nf">assert_is_list</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">list</span><span class="p">),</span> \
+      <span class="s">&#39;Expected {0} to be a list&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+
+      
+<span class="c"># STREAM FUNCTION DEFINITIONS.</span>
+<span class="c"># Each of the functions below creates an agent for a specific</span>
+<span class="c"># input-output condition: 0, 1, or more than 1 inputs, and</span>
+<span class="c"># 0, 1 or more than 1 outputs.</span>
+<span class="c"># A source has 0 inputs and 1 or more outputs.</span>
+<span class="c"># A sink has 0 outputs and 1 or inputs.</span>
+<span class="c"># merge has more than 1 input and 1 output.</span>
+<span class="c"># split has 1 input and more than 1 output.</span>
+<span class="c"># A stream operator has 1 input and 1 output.</span>
+<span class="c"># many_to_many has more than 1 input and more than 1 output.</span>
+
+<span class="c"># The function is either stateless or stateful.</span>
+<span class="c"># A stateful function has a state which is updated each</span>
+<span class="c"># time the function is executed.</span>
+
+<span class="c"># Each of the functions below create a stream function</span>
+<span class="c"># from list_func, a function on lists. The signature of</span>
+<span class="c"># list_func is specified in the function comments, e.g.,</span>
+<span class="c"># list_func: () -&gt; list for a function that has no inputs</span>
+<span class="c"># and that returns a list.</span>
+
+<span class="c"># The functions have an argument call_streams which is</span>
+<span class="c"># a list of streams. The function is executed when a</span>
+<span class="c"># stream in call_streams is extended. If call_streams</span>
+<span class="c"># is None, then the function (by means of its Agent)</span>
+<span class="c"># sets call_streams to inputs, and in this case the</span>
+<span class="c"># function is executed when any of its input streams is</span>
+<span class="c"># extended.</span>
+
+<span class="c"># The function may have num_outputs as an argument.</span>
+<span class="c"># If num_outputs is 0, the function does not return a</span>
+<span class="c"># stream; if it is 1 it returns a single stream, and if</span>
+<span class="c"># it is more than 1 it returns a list of streams where</span>
+<span class="c"># the size of the list is num_outputs.</span>
+
+<span class="c"># The structure of each of these functions is as follows:</span>
+<span class="c"># (1) specify the signature of list_func, e.g.</span>
+<span class="c">#      list_func: list -&gt; list</span>
+
+<span class="c"># (2) check on the type of call_streams (either list of</span>
+<span class="c">#     streams or None). The check is of the form:</span>
+<span class="c">#     assert_is_list_of_streams(call_streams) or</span>
+<span class="c">#     assert_is_list_of_streams_or_None(call_streams)</span>
+
+<span class="c"># (3) DEFINE STATE TRANSITION FOR THE AGENT</span>
+<span class="c">#     def transition(in_lists, state):</span>
+<span class="c">#     Where in_lists is a list of type InList.</span>
+<span class="c">#     InList = namedtuple(&#39;InList&#39;, [&#39;list&#39;, &#39;start&#39;, &#39;stop&#39;])</span>
+<span class="c">#     for a variable inlist of type InList:</span>
+<span class="c">#     inlist.list[inlist.start:inlist.stop] is an ordinary list</span>
+<span class="c">#     which is the list that the function has access to.</span>
+
+<span class="c">#     First extract a list or list of lists on which the</span>
+<span class="c">#     function operates.</span>
+<span class="c">#     If the function has a single input stream, then it operates</span>
+<span class="c">#     on a single inlist from which it extracts the ordinary list</span>
+<span class="c">#     input_list as follows:</span>
+<span class="c">#     input_list = in_list.list[in_list.start:in_list.stop]</span>
+
+<span class="c">#     If the function has more than one input stream, then the</span>
+<span class="c">#     function operates on a list of lists, all of the same size.</span>
+<span class="c">#     This list of lists is called input_lists and is obtained</span>
+<span class="c">#     as follows:</span>
+<span class="c">#     smallest_list_length = min(v.stop - v.start for v in in_lists)</span>
+<span class="c">#     input_lists = \</span>
+<span class="c">#       [v.list[v.start:v.start+smallest_list_length] for v in in_lists]</span>
+<span class="c">#</span>
+<span class="c"># (4) EXECUTE list_func: THE FUNCTION ON LISTS THAT IS LIFTED TO</span>
+<span class="c">#     A FUNCTION ON STREAMS</span>
+
+<span class="c">#     Execute list_func on the list or list of lists extracted in (3).</span>
+<span class="c">#         Execute either list_func(arg) or</span>
+<span class="c">#                        output = list_func(args)</span>
+<span class="c">#         where the output and args depend on the function.</span>
+
+<span class="c">#     The args may have a state, and may have either a list or a</span>
+<span class="c">#     list of lists. And the function may return a state and may</span>
+<span class="c">#     also return either a list or a list of lists.</span>
+
+<span class="c">#     STATELESS AND STATEFUL list_func(args)</span>
+<span class="c">#     For stateful functions, the args and the output include state.</span>
+<span class="c">#     For stateless functions, the args and output don&#39;t include state.</span>
+
+<span class="c">#     RETURN VALUES for list_func:</span>
+<span class="c">#     If the function has:</span>
+<span class="c">#       (i) no output streams, then the function does not return a value.</span>
+<span class="c">#       (ii) one output stream return a list, and</span>
+<span class="c">#       (iii) more than one output stream return a list of lists.</span>
+
+<span class="c">#     NUMBER OF INPUT STREAMS for list_func:</span>
+<span class="c">#     If the function has:</span>
+<span class="c">#     (i) no input stream (i.e., it is a source) then args of list_func do </span>
+<span class="c">#         not include a list or a list of lists.</span>
+<span class="c">#     (ii) a single input stream, then the args of list_func include a</span>
+<span class="c">#          single list.</span>
+<span class="c">#     (iii) more than one input stream, then the args of list_func include</span>
+<span class="c">#           a list of lists.</span>
+
+<span class="c"># (5) check the type of the output of list_func, e.g.</span>
+<span class="c">#     assert_is_list(output_list)</span>
+
+<span class="c"># (6) return (output_lists, state, in_lists_start_values)</span>
+<span class="c">#      where:</span>
+<span class="c">#       output_lists is a list of lists.</span>
+<span class="c">#       state is an arbitrary object (almost always not None)</span>
+<span class="c">#      in_lists_start_values is a list of pointers</span>
+<span class="c">#      to the input stream, pointing to the value that will be </span>
+<span class="c">#      read in the stream in the NEXT execution of the function.</span>
+<span class="c">#     </span>
+<span class="c"># (7) Create output streams (if any) of the function and</span>
+<span class="c">#     create an agent to update the output and execute the</span>
+<span class="c">#     function when values are appened to any stream in call_streams.</span>
+<span class="c">#     If the function has:</span>
+<span class="c">#     (i) no output streams, then the function returns [],</span>
+<span class="c">#     (ii) a single output stream then return a single stream.</span>
+<span class="c">#     (iii) more than one output stream then return a list of streams.</span>
+      
+</div>
+<div class="viewcode-block" id="single_output_source_stateless"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.single_output_source_stateless">[docs]</a><span class="k">def</span> <span class="nf">single_output_source_stateless</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">):</span>
+    <span class="c"># list_func:  () -&gt; list</span>
+    <span class="n">assert_is_list_of_streams</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">()</span>
+        <span class="n">assert_is_list</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">([</span><span class="n">output_list</span><span class="p">],</span> <span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">input_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">state</span><span class="o">=</span><span class="bp">None</span>
+    <span class="n">Agent</span><span class="p">([</span><span class="n">input_stream</span><span class="p">],</span> <span class="p">[</span><span class="n">output_stream</span><span class="p">],</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_stream</span>
+
+</div>
+<div class="viewcode-block" id="single_output_source_stateful"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.single_output_source_stateful">[docs]</a><span class="k">def</span> <span class="nf">single_output_source_stateful</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">):</span>
+    <span class="c"># list_func: state -&gt; list, state</span>
+    <span class="n">assert_is_list_of_streams</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">output_list</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">assert_is_list</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">([</span><span class="n">output_list</span><span class="p">],</span> <span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">input_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">Agent</span><span class="p">([</span><span class="n">input_stream</span><span class="p">],</span> <span class="p">[</span><span class="n">output_stream</span><span class="p">],</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_stream</span>
+
+</div>
+<div class="viewcode-block" id="many_outputs_source_stateless"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.many_outputs_source_stateless">[docs]</a><span class="k">def</span> <span class="nf">many_outputs_source_stateless</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">):</span>
+    <span class="c"># list_func:  () -&gt; list of lists.</span>
+    <span class="n">assert_is_list_of_streams</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">output_lists</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">()</span>
+        <span class="n">assert_is_list_of_lists</span><span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">list_size</span><span class="o">=</span><span class="n">num_outputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_streams</span> <span class="o">=</span> <span class="p">[</span><span class="n">Stream</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_outputs</span><span class="p">)]</span>
+    <span class="n">input_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">Agent</span><span class="p">([</span><span class="n">input_stream</span><span class="p">],</span> <span class="n">output_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_streams</span>
+
+</div>
+<div class="viewcode-block" id="many_outputs_source_stateful"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.many_outputs_source_stateful">[docs]</a><span class="k">def</span> <span class="nf">many_outputs_source_stateful</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">):</span>
+    <span class="c"># list_func:  state -&gt; list of lists, state.</span>
+    <span class="n">assert_is_list_of_streams</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">assert_is_list_of_lists</span><span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">list_size</span><span class="o">=</span><span class="n">num_outputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_streams</span> <span class="o">=</span> <span class="p">[</span><span class="n">Stream</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_outputs</span><span class="p">)]</span>
+    <span class="n">input_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">Agent</span><span class="p">([</span><span class="n">input_stream</span><span class="p">],</span> <span class="n">output_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_streams</span>
+
+</div>
+<div class="viewcode-block" id="single_input_sink_stateless"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.single_input_sink_stateless">[docs]</a><span class="k">def</span> <span class="nf">single_input_sink_stateless</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func: list  -&gt; None</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">in_list</span> <span class="o">=</span> <span class="n">in_lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">input_list</span> <span class="o">=</span> <span class="n">in_list</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">]</span>
+        <span class="n">list_func</span><span class="p">(</span><span class="n">input_list</span><span class="p">)</span>
+        <span class="c"># Since this function has no output stream, set the output_list</span>
+        <span class="c"># to be anything, e.g., [].</span>
+        <span class="k">return</span> <span class="p">([],</span> <span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">])</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_streams</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">Agent</span><span class="p">([</span><span class="n">input_stream</span><span class="p">],</span> <span class="n">output_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_streams</span>
+
+
+</div>
+<div class="viewcode-block" id="single_input_sink_stateful"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.single_input_sink_stateful">[docs]</a><span class="k">def</span> <span class="nf">single_input_sink_stateful</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func:   list, state -&gt; state</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="c"># see single_input_sink_stateless</span>
+        <span class="n">in_list</span> <span class="o">=</span> <span class="n">in_lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">input_list</span> <span class="o">=</span> <span class="n">in_list</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">]</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">input_list</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">([],</span> <span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">])</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_streams</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">Agent</span><span class="p">([</span><span class="n">input_stream</span><span class="p">],</span> <span class="n">output_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_streams</span>
+
+</div>
+<div class="viewcode-block" id="stream_operator_stateless"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.stream_operator_stateless">[docs]</a><span class="k">def</span> <span class="nf">stream_operator_stateless</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func:    list -&gt; list</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">in_list</span> <span class="o">=</span> <span class="n">in_lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">input_list</span> <span class="o">=</span> <span class="n">in_list</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">]</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">input_list</span><span class="p">)</span>
+        <span class="n">assert_is_list</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">([</span><span class="n">output_list</span><span class="p">],</span> <span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">])</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">Agent</span><span class="p">([</span><span class="n">input_stream</span><span class="p">],</span> <span class="p">[</span><span class="n">output_stream</span><span class="p">],</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_stream</span>
+
+</div>
+<div class="viewcode-block" id="stream_operator_stateful"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.stream_operator_stateful">[docs]</a><span class="k">def</span> <span class="nf">stream_operator_stateful</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func:   list, state -&gt; list, state</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">in_list</span> <span class="o">=</span> <span class="n">in_lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">input_list</span> <span class="o">=</span> <span class="n">in_list</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">]</span>
+        <span class="n">output_list</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">input_list</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">assert_is_list</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">,</span> <span class="s">&#39;stateful operator did not return state&#39;</span>
+        <span class="k">return</span> <span class="p">([</span><span class="n">output_list</span><span class="p">],</span> <span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">])</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">Agent</span><span class="p">([</span><span class="n">input_stream</span><span class="p">],</span> <span class="p">[</span><span class="n">output_stream</span><span class="p">],</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_stream</span>
+
+</div>
+<div class="viewcode-block" id="split_stateless"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.split_stateless">[docs]</a><span class="k">def</span> <span class="nf">split_stateless</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func: list -&gt; list_of_lists</span>
+    <span class="c">#                where len(list_of_lists) == num_outputs</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">in_list</span> <span class="o">=</span> <span class="n">in_lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">input_list</span> <span class="o">=</span> <span class="n">in_list</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">]</span>
+        <span class="n">output_lists</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">input_list</span><span class="p">)</span>
+        <span class="n">assert_is_list_of_lists</span><span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">])</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_streams</span> <span class="o">=</span> <span class="p">[</span><span class="n">Stream</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_outputs</span><span class="p">)]</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">Agent</span><span class="p">([</span><span class="n">input_stream</span><span class="p">],</span> <span class="n">output_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_streams</span>
+
+</div>
+<div class="viewcode-block" id="split_stateful"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.split_stateful">[docs]</a><span class="k">def</span> <span class="nf">split_stateful</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func: list, state -&gt; list_of_lists, state</span>
+    <span class="c">#                where len(list_of_lists) == num_outputs</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">in_list</span> <span class="o">=</span> <span class="n">in_lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">input_list</span> <span class="o">=</span> <span class="n">in_list</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">]</span>
+        <span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">input_list</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">assert_is_list_of_lists</span><span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="p">[</span><span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">])</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_streams</span> <span class="o">=</span> <span class="p">[</span><span class="n">Stream</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_outputs</span><span class="p">)]</span>
+    <span class="n">Agent</span><span class="p">([</span><span class="n">input_stream</span><span class="p">],</span> <span class="n">output_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_streams</span>
+
+</div>
+<div class="viewcode-block" id="many_inputs_sink_stateless"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.many_inputs_sink_stateless">[docs]</a><span class="k">def</span> <span class="nf">many_inputs_sink_stateless</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func: list_of_lists -&gt; empty</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">smallest_list_length</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">v</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">)</span>
+        <span class="n">input_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="n">list_func</span><span class="p">(</span><span class="n">input_lists</span><span class="p">)</span>
+        <span class="n">output_lists</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">in_lists_start_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">in_lists_start_values</span><span class="p">)</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_streams</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">Agent</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">output_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_streams</span>
+
+</div>
+<div class="viewcode-block" id="many_inputs_sink_stateful"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.many_inputs_sink_stateful">[docs]</a><span class="k">def</span> <span class="nf">many_inputs_sink_stateful</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func: list_of_lists -&gt; state</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">smallest_list_length</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">v</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">)</span>
+        <span class="n">input_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">input_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">output_lists</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">in_lists_start_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">in_lists_start_values</span><span class="p">)</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_streams</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">Agent</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">output_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_streams</span>
+
+</div>
+<div class="viewcode-block" id="merge_stateless"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.merge_stateless">[docs]</a><span class="k">def</span> <span class="nf">merge_stateless</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func: list_of_lists -&gt; list</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">smallest_list_length</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">v</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">)</span>
+        <span class="n">input_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">input_lists</span><span class="p">)</span>
+        <span class="n">assert_is_list</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
+        <span class="n">in_lists_start_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">([</span><span class="n">output_list</span><span class="p">],</span> <span class="n">state</span><span class="p">,</span> <span class="n">in_lists_start_values</span><span class="p">)</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">Agent</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="p">[</span><span class="n">output_stream</span><span class="p">],</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_stream</span>
+
+</div>
+<div class="viewcode-block" id="merge_stateful"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.merge_stateful">[docs]</a><span class="k">def</span> <span class="nf">merge_stateful</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func: list_of_lists, state -&gt; list, state</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">smallest_list_length</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">v</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">)</span>
+        <span class="n">input_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="n">output_list</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">input_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">assert_is_list</span><span class="p">(</span><span class="n">output_list</span><span class="p">)</span>
+        <span class="n">smallest_list_length</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">v</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">)</span>        
+        <span class="n">in_lists_start_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">([</span><span class="n">output_list</span><span class="p">],</span> <span class="n">state</span><span class="p">,</span> <span class="n">in_lists_start_values</span><span class="p">)</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">Agent</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="p">[</span><span class="n">output_stream</span><span class="p">],</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_stream</span>
+
+</div>
+<div class="viewcode-block" id="many_to_many_stateless"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.many_to_many_stateless">[docs]</a><span class="k">def</span> <span class="nf">many_to_many_stateless</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func: list of lists -&gt; list of lists</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">smallest_list_length</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">v</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">)</span>
+        <span class="n">input_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="n">output_lists</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">input_lists</span><span class="p">)</span>
+        <span class="n">assert_is_list_of_lists</span><span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">)</span>
+        <span class="n">in_lists_start_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">in_lists_start_values</span><span class="p">)</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_streams</span> <span class="o">=</span> <span class="p">[</span><span class="n">Stream</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_outputs</span><span class="p">)]</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">Agent</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">output_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_streams</span>
+    
+
+</div>
+<div class="viewcode-block" id="many_to_many_stateful"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.many_to_many_stateful">[docs]</a><span class="k">def</span> <span class="nf">many_to_many_stateful</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c"># list_func: list of lists, state -&gt; list of lists, state</span>
+    <span class="n">assert_is_list_of_streams_or_None</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">smallest_list_length</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">stop</span> <span class="o">-</span> <span class="n">v</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">)</span>
+        <span class="n">input_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="p">:</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">list_func</span><span class="p">(</span><span class="n">input_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="n">assert_is_list_of_lists</span><span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">)</span>
+        <span class="n">in_lists_start_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span><span class="o">.</span><span class="n">start</span><span class="o">+</span><span class="n">smallest_list_length</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">in_lists</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">in_lists_start_values</span><span class="p">)</span>
+
+    <span class="c"># Create agent</span>
+    <span class="n">output_streams</span> <span class="o">=</span> <span class="p">[</span><span class="n">Stream</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_outputs</span><span class="p">)]</span>
+    <span class="n">Agent</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">output_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">output_streams</span>
+
+</div>
+<div class="viewcode-block" id="stream_func"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.stream_func">[docs]</a><span class="k">def</span> <span class="nf">stream_func</span><span class="p">(</span><span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="c">#inputs is one of the following:</span>
+    <span class="c"># None, a Stream, or a list of Streams</span>
+
+    <span class="c"># num_outputs is a nonnegative integer;</span>
+    <span class="c"># it is the number of output streams of</span>
+    <span class="c"># this function</span>
+
+    <span class="c"># call_streams is a list of Streams</span>
+
+    <span class="c"># state is None or is an arbitrary objects</span>
+
+    <span class="c"># list_func returns a list of num_outputs list</span>
+    <span class="c"># and may, in addition, return a state.</span>
+    <span class="c"># The arguments of list_func are:</span>
+    <span class="c">#     empty if inputs is None</span>
+    <span class="c">#     a list if inputs is a Stream</span>
+    <span class="c">#     a list of lists if inputs is a list of Streams</span>
+
+    <span class="c"># Check types of parameters</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_outputs</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Expected num_outputs to be int, not:&#39;</span><span class="p">,</span>
+                        <span class="n">num_outputs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">num_outputs</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&#39;Expected num_outputs to be nonnegative, not:&#39;</span><span class="p">,</span>
+                         <span class="n">num_outputs</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span><span class="p">((</span><span class="n">inputs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span>
+           <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">Stream</span><span class="p">)</span> <span class="ow">or</span>
+           <span class="p">((</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span>
+             <span class="p">(</span><span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">Stream</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">))</span>
+             <span class="p">)</span>
+           <span class="p">))):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Expected inputs to be None, Stream or list of Streams, not:&#39;</span><span class="p">,</span>
+                        <span class="n">inputs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span><span class="p">((</span><span class="n">call_streams</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">)</span> <span class="ow">or</span>
+           <span class="p">((</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">call_streams</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span>
+             <span class="p">(</span><span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">Stream</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">call_streams</span><span class="p">))</span>
+             <span class="p">)</span>
+           <span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Expected call_streams to be None, Stream or list of Streams, not:&#39;</span><span class="p">,</span>
+                        <span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">inputs</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="c"># Check that call_streams is nonempty</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">call_streams</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;Expected call_streams to be a nonempty list of streams, not:&#39;</span><span class="p">,</span>
+                        <span class="n">call_streams</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="n">num_outputs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s">&#39;inputs is None and num_outputs == 0&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">num_outputs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">single_output_source_stateless</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">single_output_source_stateful</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">many_outputs_source_stateless</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">many_outputs_source_stateful</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">Stream</span><span class="p">):</span>
+        <span class="n">input_stream</span> <span class="o">=</span> <span class="n">inputs</span>
+        <span class="k">if</span> <span class="n">num_outputs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">single_input_sink_stateless</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">single_input_sink_stateful</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">num_outputs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">stream_operator_stateless</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">stream_operator_stateful</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">split_stateless</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">split_stateful</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">input_stream</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">num_outputs</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">many_inputs_sink_stateless</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">many_inputs_sink_stateful</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">num_outputs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">merge_stateless</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">merge_stateful</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">many_to_many_stateless</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">many_to_many_stateful</span><span class="p">(</span>
+                    <span class="n">list_func</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">call_streams</span><span class="p">)</span>
+
+
+</div>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.ListOperators.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">x_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">]</span>
+    <span class="n">xx_list</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">():</span>
+        <span class="kn">import</span> <span class="nn">random</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()]</span>
+    <span class="k">def</span> <span class="nf">ff</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">xx_list</span>
+    <span class="k">def</span> <span class="nf">g</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x_list</span><span class="p">[</span><span class="n">state</span><span class="p">:</span> <span class="n">state</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span> <span class="n">state</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">h</span><span class="p">():</span>
+        <span class="k">return</span> <span class="p">([</span><span class="n">x_list</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">x_list</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]])</span>
+    <span class="k">def</span> <span class="nf">p</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">([</span><span class="n">x_list</span><span class="p">[</span><span class="n">state</span><span class="p">:</span><span class="n">state</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span> <span class="n">x_list</span><span class="p">[</span><span class="n">state</span><span class="o">+</span><span class="mi">2</span><span class="p">:</span><span class="n">state</span><span class="o">+</span><span class="mi">4</span><span class="p">]],</span> <span class="n">state</span><span class="o">+</span><span class="mi">4</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">q</span><span class="p">(</span><span class="n">input_list</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;single input sink, stateless:&quot;</span><span class="p">,</span> <span class="n">input_list</span>
+        <span class="k">return</span>
+    <span class="k">def</span> <span class="nf">r</span><span class="p">(</span><span class="n">input_list</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">input_list</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">input_list</span><span class="p">)):</span>
+            <span class="n">state</span> <span class="o">+=</span> <span class="n">input_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">output_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="k">print</span> <span class="s">&#39;single input sink, stateful:&#39;</span><span class="p">,</span> <span class="n">output_list</span>
+        <span class="k">return</span> <span class="n">state</span>
+    <span class="k">def</span> <span class="nf">s</span><span class="p">(</span><span class="n">input_list</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">2</span><span class="o">*</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">input_list</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">t</span><span class="p">(</span><span class="n">input_list</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">output_list</span> <span class="o">=</span> <span class="n">input_list</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">input_list</span><span class="p">)):</span>
+            <span class="n">state</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">input_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">output_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_list</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">u</span><span class="p">(</span><span class="n">input_list</span><span class="p">):</span>
+        <span class="n">output_0_list</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">input_list</span><span class="p">)</span>
+        <span class="n">output_1_list</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">%</span><span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">input_list</span><span class="p">)</span>
+        <span class="n">output_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">output_0_list</span><span class="p">,</span> <span class="n">output_1_list</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">output_lists</span>
+        
+    <span class="k">def</span> <span class="nf">v</span><span class="p">(</span><span class="n">input_list</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">output_0_list</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">%</span><span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">input_list</span><span class="p">)</span>
+        <span class="n">output_1_list</span> <span class="o">=</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="o">%</span><span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">input_list</span><span class="p">)</span>
+        <span class="n">output_0_list</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">state</span><span class="o">*</span><span class="n">v</span><span class="p">,</span> <span class="n">output_0_list</span><span class="p">)</span>
+        <span class="n">output_1_list</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">state</span><span class="o">*</span><span class="n">v</span><span class="p">,</span> <span class="n">output_1_list</span><span class="p">)</span>
+        <span class="n">state</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">output_lists</span> <span class="o">=</span> <span class="p">[</span><span class="n">output_0_list</span><span class="p">,</span> <span class="n">output_1_list</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">w</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">list_of_lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">list_of_lists</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">print</span> <span class="s">&quot;many input sink, stateless:&quot;</span><span class="p">,</span>\
+          <span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="n">y</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)]</span>
+
+
+    <span class="k">def</span> <span class="nf">gg</span><span class="p">(</span><span class="n">list_of_lists</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s">&quot;state&quot;</span><span class="p">,</span> <span class="n">state</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">list_of_lists</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">list_of_lists</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">result_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">result_list</span><span class="p">)):</span>
+            <span class="n">state</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">result_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="k">print</span> <span class="s">&quot;many input sink, stateful:&quot;</span><span class="p">,</span> <span class="n">result_list</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">print_stream_recent</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="k">print</span> <span class="n">s</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot; = &quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">.</span><span class="n">recent</span><span class="p">[:</span><span class="n">s</span><span class="o">.</span><span class="n">stop</span><span class="p">]</span>
+
+        
+    <span class="n">trigger</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">()</span>
+    <span class="n">x_stream</span> <span class="o">=</span> <span class="n">stream_func</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">xx_stream</span> <span class="o">=</span> <span class="n">stream_func</span><span class="p">(</span><span class="n">ff</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>    
+    <span class="n">y_stream</span> <span class="o">=</span> <span class="n">stream_func</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">a_stream</span><span class="p">,</span> <span class="n">b_stream</span> <span class="o">=</span> <span class="n">stream_func</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">c_stream</span><span class="p">,</span> <span class="n">d_stream</span> <span class="o">=</span> <span class="n">stream_func</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">stream_func</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">c_stream</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">stream_func</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">c_stream</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">e_stream</span> <span class="o">=</span> <span class="n">stream_func</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">c_stream</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">aa_stream</span> <span class="o">=</span> <span class="n">stream_func</span><span class="p">(</span><span class="n">list_func</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">c_stream</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">bb_stream</span><span class="p">,</span> <span class="n">cc_stream</span> <span class="o">=</span> \
+      <span class="n">stream_func</span><span class="p">(</span><span class="n">list_func</span><span class="o">=</span><span class="n">u</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">x_stream</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">dd_stream</span><span class="p">,</span> <span class="n">ee_stream</span> <span class="o">=</span> \
+      <span class="n">stream_func</span><span class="p">(</span><span class="n">list_func</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="n">x_stream</span><span class="p">,</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">stream_func</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">x_stream</span><span class="p">,</span> <span class="n">xx_stream</span><span class="p">],</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">stream_func</span><span class="p">(</span><span class="n">gg</span><span class="p">,</span> <span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">x_stream</span><span class="p">,</span> <span class="n">xx_stream</span><span class="p">],</span> <span class="n">num_outputs</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">call_streams</span><span class="o">=</span><span class="p">[</span><span class="n">trigger</span><span class="p">])</span>
+    <span class="n">x_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;x_stream&#39;</span><span class="p">)</span>
+    <span class="n">xx_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;xx_stream&#39;</span><span class="p">)</span>
+    <span class="n">y_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;y_stream&#39;</span><span class="p">)</span>
+    <span class="n">a_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;a_stream&#39;</span><span class="p">)</span>
+    <span class="n">b_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;b_stream&#39;</span><span class="p">)</span>
+    <span class="n">c_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;c_stream&#39;</span><span class="p">)</span>
+    <span class="n">d_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;d_stream&#39;</span><span class="p">)</span>
+    <span class="n">e_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;e_stream&#39;</span><span class="p">)</span>
+    <span class="n">aa_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;aa_stream&#39;</span><span class="p">)</span>
+    <span class="n">bb_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;bb_stream&#39;</span><span class="p">)</span>
+    <span class="n">cc_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;cc_stream&#39;</span><span class="p">)</span>
+    <span class="n">dd_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;dd_stream&#39;</span><span class="p">)</span>
+    <span class="n">ee_stream</span><span class="o">.</span><span class="n">set_name</span><span class="p">(</span><span class="s">&#39;ee_stream&#39;</span><span class="p">)</span>
+
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">x_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">xx_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">y_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">a_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">b_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">c_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">d_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">e_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">aa_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">bb_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">cc_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">dd_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">ee_stream</span><span class="p">)</span>
+    
+    <span class="n">trigger</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">x_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">xx_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">y_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">a_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">b_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">c_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">d_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">e_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">aa_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">bb_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">cc_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">dd_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">ee_stream</span><span class="p">)</span>
+
+    <span class="n">trigger</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">x_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">xx_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">y_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">a_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">b_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">c_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">d_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">e_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">aa_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">bb_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">cc_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">dd_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">ee_stream</span><span class="p">)</span>
+
+    <span class="n">trigger</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">e_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">aa_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">bb_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">cc_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">dd_stream</span><span class="p">)</span>
+    <span class="n">print_stream_recent</span><span class="p">(</span><span class="n">ee_stream</span><span class="p">)</span>
+</div>
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">stream-py  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Author.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>

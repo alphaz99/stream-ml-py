@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>STREAMS_CODE.TimedOperators &mdash; stream-py  documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="stream-py  documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">stream-py  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for STREAMS_CODE.TimedOperators</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">Agent</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">Stream</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">MergeSplitOpStructures</span> <span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="list_index_for_timestamp"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.TimedOperators.list_index_for_timestamp">[docs]</a><span class="k">def</span> <span class="nf">list_index_for_timestamp</span><span class="p">(</span><span class="n">in_list</span><span class="p">,</span> <span class="n">start_index</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; A helper function for timed operators.</span>
+
+<span class="sd">    Returns positive integer i where:</span>
+<span class="sd">    either: &#39;FOUND TIME WINDOW IN IN_LIST&#39;</span>
+<span class="sd">        i &gt; start_index and</span>
+<span class="sd">        i &lt;= in_list.stop  and</span>
+<span class="sd">        in_list.list[i-1].time &gt;= timestamp and</span>
+<span class="sd">        (i == start_index+1 or in_list.list[i-2].time &lt; timestamp)</span>
+<span class="sd">    or: &#39;NO TIME WINDOW IN IN_LIST&#39;</span>
+<span class="sd">        i &lt; 0 and</span>
+<span class="sd">           (in_list.list[in_list.stop-1] &lt;= timestamp</span>
+<span class="sd">                       or</span>
+<span class="sd">           (in_list.start = in_list.stop)</span>
+
+<span class="sd">    Requires:</span>
+<span class="sd">         start_index &gt;= in_list.start and</span>
+<span class="sd">         start_index &lt; in_list.stop</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">in_list</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span> <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">start_index</span> <span class="o">&lt;</span> <span class="n">in_list</span><span class="o">.</span><span class="n">start</span> <span class="ow">or</span> <span class="n">start_index</span> <span class="o">&gt;=</span> <span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s">&#39;start_index out of range: start_index =&#39;</span><span class="p">,</span> <span class="n">start_index</span><span class="p">,</span>
+                        <span class="s">&#39; in_list.start = &#39;</span><span class="p">,</span> <span class="n">in_list</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+                        <span class="s">&#39; in_list.stop = &#39;</span><span class="p">,</span> <span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">start_index</span><span class="p">,</span> <span class="n">in_list</span><span class="o">.</span><span class="n">stop</span><span class="p">):</span>
+        <span class="c"># assert i &lt;= in_list.stop-1</span>
+        <span class="k">if</span> <span class="n">in_list</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">time</span> <span class="o">&gt;=</span> <span class="n">timestamp</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">i</span>
+    <span class="c"># assert in_list.list[in_list.stop - 1] &lt; timestamp</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+</div>
+<div class="viewcode-block" id="timed_many_to_many"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.TimedOperators.timed_many_to_many">[docs]</a><span class="k">def</span> <span class="nf">timed_many_to_many</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">in_streams</span><span class="p">,</span> <span class="n">num_out_streams</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span>
+                       <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="n">range_out</span> <span class="o">=</span> <span class="nb">range</span><span class="p">((</span><span class="n">num_out_streams</span><span class="p">))</span>
+    <span class="n">range_in</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">in_streams</span><span class="p">))</span>
+    <span class="n">window_start_time</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">combined_state</span> <span class="o">=</span> <span class="p">(</span><span class="n">window_start_time</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">transition</span><span class="p">(</span><span class="n">in_lists</span><span class="p">,</span> <span class="n">combined_state</span><span class="p">):</span>
+        <span class="n">window_start_time</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">combined_state</span>
+        <span class="n">output_lists</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">range_out</span><span class="p">]</span>
+        <span class="n">window_end_time</span> <span class="o">=</span> <span class="n">window_start_time</span> <span class="o">+</span> <span class="n">window_size</span>
+        <span class="n">window_start_indexes</span> <span class="o">=</span> <span class="p">[</span> <span class="n">in_lists</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">range_in</span><span class="p">]</span>
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">window_end_indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">list_index_for_timestamp</span><span class="p">(</span>
+                <span class="n">in_lists</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+                <span class="n">window_start_indexes</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+                <span class="n">window_end_time</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">range_in</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">window_end_indexes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">range_in</span><span class="p">):</span>
+                <span class="k">break</span>
+            <span class="n">windows</span> <span class="o">=</span> <span class="p">[</span><span class="n">in_lists</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">list</span><span class="p">[</span><span class="n">window_start_indexes</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span> \
+                                       <span class="n">window_end_indexes</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">range_in</span><span class="p">]</span>
+            <span class="n">increments</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">windows</span><span class="p">)</span> <span class="k">if</span> <span class="n">state</span> <span class="ow">is</span> <span class="bp">None</span> <span class="k">else</span> <span class="n">f</span><span class="p">(</span><span class="n">windows</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">range_out</span><span class="p">:</span>
+                <span class="n">output_lists</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">TimeAndValue</span><span class="p">(</span><span class="n">window_end_time</span><span class="p">,</span> <span class="n">increments</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+            <span class="n">window_start_time</span> <span class="o">+=</span> <span class="n">step_size</span>
+            <span class="n">window_end_time</span> <span class="o">+=</span> <span class="n">step_size</span>
+            <span class="n">new_window_start_indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">list_index_for_timestamp</span><span class="p">(</span>
+                <span class="n">in_lists</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+                <span class="n">window_start_indexes</span><span class="p">[</span><span class="n">j</span><span class="p">],</span>
+                <span class="n">window_start_time</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">range_in</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">new_window_start_indexes</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">range_in</span><span class="p">):</span>
+                <span class="k">break</span>
+            <span class="c">## #CHECKING FOR PROGRESS TOWARDS TERMINATION</span>
+            <span class="c">## if (any(new_window_start_indexes[j] &lt; window_start_indexes[j]</span>
+            <span class="c">##        for j in range_in) or</span>
+            <span class="c">##        all(new_window_start_indexes[j] == window_start_indexes[j]</span>
+            <span class="c">##        for j in range_in)):</span>
+            <span class="c">##     raise Exception(&#39;TimedOperator: start_indexes&#39;)</span>
+            <span class="n">window_start_indexes</span> <span class="o">=</span> <span class="n">new_window_start_indexes</span>
+
+        <span class="n">combined_state</span> <span class="o">=</span> <span class="p">(</span><span class="n">window_start_time</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">output_lists</span><span class="p">,</span> <span class="n">combined_state</span><span class="p">,</span> <span class="n">window_start_indexes</span><span class="p">)</span>
+    <span class="c"># Create agent</span>
+    <span class="n">out_streams</span> <span class="o">=</span> <span class="p">[</span><span class="n">Stream</span><span class="p">()</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_out_streams</span><span class="p">)]</span>
+    <span class="n">combined_state</span> <span class="o">=</span> <span class="p">(</span><span class="n">window_start_time</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+    <span class="n">Agent</span><span class="p">(</span><span class="n">in_streams</span><span class="p">,</span> <span class="n">out_streams</span><span class="p">,</span> <span class="n">transition</span><span class="p">,</span> <span class="n">combined_state</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">out_streams</span>
+</div>
+<div class="viewcode-block" id="timed_merge"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.TimedOperators.timed_merge">[docs]</a><span class="k">def</span> <span class="nf">timed_merge</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">in_streams</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">merge_structure</span><span class="p">(</span><span class="n">timed_many_to_many</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">in_streams</span><span class="p">,</span>
+                           <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="timed_split"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.TimedOperators.timed_split">[docs]</a><span class="k">def</span> <span class="nf">timed_split</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">in_stream</span><span class="p">,</span> <span class="n">num_out_streams</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span>
+                <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">split_structure</span><span class="p">(</span><span class="n">timed_many_to_many</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">in_stream</span><span class="p">,</span> <span class="n">num_out_streams</span><span class="p">,</span>
+                           <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+</div>
+<div class="viewcode-block" id="timed_op"><a class="viewcode-back" href="../../STREAMS_CODE.html#STREAMS_CODE.TimedOperators.timed_op">[docs]</a><span class="k">def</span> <span class="nf">timed_op</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">in_stream</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span> <span class="n">step_size</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">op_structure</span><span class="p">(</span><span class="n">timed_many_to_many</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">in_stream</span><span class="p">,</span> <span class="n">window_size</span><span class="p">,</span>
+                        <span class="n">step_size</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="bp">None</span><span class="p">)</span>
+</pre></div></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">stream-py  documentation</a> &raquo;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015, Author.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.1.
+    </div>
+  </body>
+</html>
