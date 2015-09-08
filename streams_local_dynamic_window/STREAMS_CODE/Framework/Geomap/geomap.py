@@ -3,32 +3,36 @@ from mpl_toolkits.basemap import Basemap
 
 
 class Geomap:
-    def __init__(self, llcrnrlat, llcrnrlon, urcrnrlat, urcrnrlon,
-                 projection='cyl', resolution='l', area_thresh=1000.0,
-                 figsize=(15, 8)):
-        self.llcrnrlat = llcrnrlat
-        self.llcrnrlon = llcrnrlon
-        self.urcrnrlat = urcrnrlat
-        self.urcrnrlon = urcrnrlon
-        self.projection = projection
-        self.resolution = resolution
-        self.area_thresh = area_thresh
-        self.initialize(figsize)
+    """
+    Mapping framework for plotting data onto a map.
 
-    def initialize(self, figsize):
+    Given latitude - longitude coordinates, this framework allows data to be
+    plotted onto a world map with specified region and projection. Data can be
+    plotted with different colors as well as labels. Previous data can also be
+    cleared.
+
+    Parameters
+    ----------
+    figsize : tuple
+        A tuple containing the width and height of the plot for the map (the
+        default is (15, 8)).
+    kwargs : keyword arguments
+        Keyword arguments. The valid keywords are the keywords for the __init__
+        method of Basemap.
+    """
+
+    def __init__(self, figsize=(15, 8), **kwargs):
+        self._initialize(figsize, **kwargs)
+
+    def _initialize(self, figsize, **kwargs):
         plt.ion()
-        self.map = Basemap(projection=self.projection,
-                           llcrnrlat=self.llcrnrlat,
-                           llcrnrlon=self.llcrnrlon, urcrnrlat=self.urcrnrlat,
-                           urcrnrlon=self.urcrnrlon,
-                           resolution=self.resolution,
-                           area_thresh=self.area_thresh)
+        self.map = Basemap(**kwargs)
         self.f = plt.figure(figsize=figsize)
-        self.draw_map()
+        self._draw_map()
         self.f.tight_layout()
         self.pt_sets = []
 
-    def draw_map(self):
+    def _draw_map(self):
         self.map.drawcoastlines()
         self.map.drawcountries()
         self.map.drawstates()
@@ -36,6 +40,33 @@ class Geomap:
         self.map.drawmapboundary(fill_color='grey')
 
     def plot(self, x, index=None, text=None, color='Blue', s=30):
+        """
+        Plots data onto the map.
+
+        This function allows data in the form of latitude-longitude coordinates
+        to be plotted on the map. Supports coloring by index or name as well as
+        text labels.
+
+        Parameters
+        ----------
+        x : numpy.ndarray
+            A numpy array containing data to be plotted. Dimensions must be
+            n * 2, where n is the number of data points. The first column is
+            the latitude and the second column is the longitude.
+        index : numpy.ndarray or list, optional
+            A numpy array or list containing indices for coloring the data.
+            Dimensions must be n * 1, where n is the number of data points. If
+            not provided, data is colored with `color`.
+        text : numpy.ndarray, optional
+            A numpy array containing string labels for each data point.
+            Dimensions must be n * 1, where n is the number of data points.
+        color : string, optional
+            A string specifying the color of the data points (the default is
+            blue). Used if index is not provided.
+        s : int, optional
+            An int specifying the size of the data points (the default is 30).
+        """
+
         lat = x[:, 0]
         lon = x[:, 1]
         x_map, y_map = self.map(lon, lat)
@@ -56,6 +87,11 @@ class Geomap:
         plt.draw()
 
     def clear(self):
+        """
+        Clears all plotted data on the map.
+
+        """
+
         for p in self.pt_sets[:]:
             p.remove()
             self.pt_sets.remove(p)
