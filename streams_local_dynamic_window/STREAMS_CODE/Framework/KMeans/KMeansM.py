@@ -3,6 +3,40 @@ from kmeans import kmeans, findClosestCentroids, evaluate_error, init_plot
 
 
 class KMeans:
+    """Helper class for KMeans.
+
+    This class provides train and predict functions for using KMeans with
+    `Stream_Learn`.
+
+    Parameters
+    ----------
+    draw : boolean
+        Describes whether the data is to be plotted (data must have 2 or less
+        dimensions).
+    output : boolean
+        Describes whether debug info is to be printed. Info includes average
+        error, average number of iterations, current number of iterations, and
+        number of changed points over time.
+    k : int
+        Describes the number of clusters to train.
+    incremental : boolean, optional
+        Describes whether the kmeans algorithm is run incrementally or not (the
+        default is True). If incremental, then previous clusters are used to
+        initialize new clusters. Otherwise, clusters are reinitialized randomly
+        for each window.
+
+    Attributes
+    ----------
+    train : function
+        The train function with signature as required by `Stream_Learn`.
+    predict : function
+        The predict function with signature as required by 'Stream_Learn'.
+    avg_iterations : float
+        The average number of iterations per window of data trained.
+    avg_error : float
+        The average error per window of data trained.
+
+    """
     def __init__(self, draw, output, k, incremental=True):
         self.draw = draw
         self.output = output
@@ -10,13 +44,13 @@ class KMeans:
         self.incremental = incremental
         self.avg_iterations = 0
         self.avg_error = 0
-        self.init_func()
+        self._init_func()
         self.centroids = None
 
         if draw:
             init_plot()
 
-    def init_func(self):
+    def _init_func(self):
 
         def train_function(x, y, model, window_state):
             if not model:
@@ -59,7 +93,12 @@ class KMeans:
         self.predict = predict_function
 
     def reset(self):
-        self.init_func()
+        """Resets the KMeans functions and average values.
+
+        Resets: train, predict, avg_iterations, avg_error
+
+        """
+        self._init_func()
         if self.draw:
             init_plot()
 

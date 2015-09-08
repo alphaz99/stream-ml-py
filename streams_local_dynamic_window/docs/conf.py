@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # STREAMS_CODE documentation build configuration file, created by
-# sphinx-quickstart on Mon Sep  7 21:55:41 2015.
+# sphinx-quickstart on Tue Sep  8 14:02:12 2015.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -31,10 +31,10 @@ sys.path.insert(0, os.path.abspath('../'))
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
     'numpydoc',
+    'sphinx.ext.autosummary',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
