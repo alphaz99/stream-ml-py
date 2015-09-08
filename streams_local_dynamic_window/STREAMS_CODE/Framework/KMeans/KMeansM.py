@@ -3,9 +3,9 @@ from kmeans import kmeans, findClosestCentroids, evaluate_error, init_plot
 
 
 class KMeans:
-    """Helper class for KMeans.
+    """Helper class for kmeans clustering.
 
-    This class provides train and predict functions for using KMeans with
+    This class provides train and predict functions for using kmeans with
     `Stream_Learn`.
 
     Parameters

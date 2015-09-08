@@ -3,20 +3,59 @@ from linear_regression import train_sgd, train, init_plot, plot, evaluate_error
 
 
 class LinearRegression:
+    """Helper class for linear regression.
+
+    This class provides train and predict functions for using linear regression
+    with `Stream_Learn`.
+
+    Parameters
+    ----------
+    draw : boolean
+        Describes whether the data is to be plotted (data must have 2 or less
+        dimensions).
+    output : boolean
+        Describes whether debug info is to be printed. Info includes average
+        error and current error.
+    incremental : boolean, optional
+        Describes whether the linear regression algorithm is run incrementally
+        or not (the default is True). If incremental, then the algorithm uses
+        incremental calculations for matrix inversion and matrix multiplication
+        if the data has 1 feature, or stochastic gradient descent if the data
+        has more than 1 feature. Otherwise, the algorithm uses linear algebra.
+    alpha : float, optional
+        Learning rate for stochastic gradient descent (the default is 0.01).
+        Ignored if incremental is False or if incremental is True and data has
+        1 feature.
+    figsize : tuple
+        A tuple containing the width and height of the plot for the map (the
+        default is (15, 8)).
+
+    Attributes
+    ----------
+    train : function
+        The train function with signature as required by `Stream_Learn`.
+    predict : function
+        The predict function with signature as required by `Stream_Learn`.
+    w : tuple
+        The learned weight vector.
+    avg_error : float
+        The average error per window of data trained.
+
+    """
     def __init__(self, draw, output, incremental=True, alpha=0.01,
                  figsize=(15, 8)):
         self.draw = draw
         self.output = output
         self.avg_error = 0
         self.incremental = incremental
-        self.init_func()
+        self._init_func()
         self.w = 0
         self.alpha = alpha
 
         if draw:
             init_plot(figsize)
 
-    def init_func(self):
+    def _init_func(self):
 
         if self.incremental:
             def train_function(x, y, model, window_state):
@@ -130,7 +169,12 @@ class LinearRegression:
         self.predict = predict_function
 
     def reset(self):
-        self.init_func()
+        """Resets the KMeans functions and average values.
+
+        Resets: train, predict, avg_error
+
+        """
+        self._init_func()
         if self.draw:
             init_plot()
         self.avg_error = 0
