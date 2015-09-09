@@ -239,6 +239,15 @@
                                   <span class="n">state</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">])</span>
 
 <div class="viewcode-block" id="Stream_Learn.run"><a class="viewcode-back" href="../../../STREAMS_CODE.Framework.html#STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Runs the framework and returns a `Stream` of outputs.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        y_predict : `Stream`</span>
+<span class="sd">            A `Stream` containing outputs as returned by `predict_func`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_streams</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="s">&#39;model&#39;</span><span class="p">)</span>
@@ -262,6 +271,22 @@
         <span class="k">return</span> <span class="n">y_predict</span>
 </div>
 <div class="viewcode-block" id="Stream_Learn.reset"><a class="viewcode-back" href="../../../STREAMS_CODE.Framework.html#STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.reset">[docs]</a>    <span class="k">def</span> <span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the training window to `min_window_size`.</span>
+
+<span class="sd">        This function resets the training window to `min_window_size`. After</span>
+<span class="sd">        resetting, the window has the last `min_window_size` points in the</span>
+<span class="sd">        `Stream` `x_train`. For example, if `max_window_size` is 100,</span>
+<span class="sd">        `min_window_size` is 2, and the window contains points [1, 100],</span>
+<span class="sd">        after resetting the window contains points [98, 99].</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        If reset() is called before the window has reached `max_window_size`,</span>
+<span class="sd">        the window will continue increasing in size until it reaches</span>
+<span class="sd">        `max_window_size`. Then, the window will reset to `min_window_size`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">window_state</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">True</span></div></div>
 </pre></div>
 

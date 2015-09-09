@@ -4,10 +4,10 @@ STREAMS_CODE.Framework.KMeans package
 Submodules
 ----------
 
-STREAMS_CODE.Framework.KMeans.KMeansM module
---------------------------------------------
+STREAMS_CODE.Framework.KMeans.KMeansStream module
+-------------------------------------------------
 
-.. automodule:: STREAMS_CODE.Framework.KMeans.KMeansM
+.. automodule:: STREAMS_CODE.Framework.KMeans.KMeansStream
     :members:
     :undoc-members:
     :show-inheritance:

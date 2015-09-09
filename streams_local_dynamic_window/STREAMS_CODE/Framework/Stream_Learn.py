@@ -190,6 +190,15 @@ class Stream_Learn:
                                   state=[0, False, False])
 
     def run(self):
+        """
+        Runs the framework and returns a `Stream` of outputs.
+
+        Returns
+        -------
+        y_predict : `Stream`
+            A `Stream` containing outputs as returned by `predict_func`.
+
+        """
         self._initialize()
         self._init_streams()
         self.model_stream = Stream('model')
@@ -213,4 +222,20 @@ class Stream_Learn:
         return y_predict
 
     def reset(self):
+        """
+        Resets the training window to `min_window_size`.
+
+        This function resets the training window to `min_window_size`. After
+        resetting, the window has the last `min_window_size` points in the
+        `Stream` `x_train`. For example, if `max_window_size` is 100,
+        `min_window_size` is 2, and the window contains points [1, 100],
+        after resetting the window contains points [98, 99].
+
+        Notes
+        -----
+        If reset() is called before the window has reached `max_window_size`,
+        the window will continue increasing in size until it reaches
+        `max_window_size`. Then, the window will reset to `min_window_size`.
+
+        """
         self.window_state[2] = True

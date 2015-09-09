@@ -52,35 +52,90 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="module-STREAMS_CODE.Framework.LinearRegression.LinearRegression">
-<span id="streams-code-framework-linearregression-linearregression-module"></span><h2>STREAMS_CODE.Framework.LinearRegression.LinearRegression module<a class="headerlink" href="#module-STREAMS_CODE.Framework.LinearRegression.LinearRegression" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream">
+<span id="streams-code-framework-linearregression-linearregressionstream-module"></span><h2>STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream module<a class="headerlink" href="#module-STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="STREAMS_CODE.Framework.LinearRegression.LinearRegression.LinearRegression">
-<em class="property">class </em><code class="descclassname">STREAMS_CODE.Framework.LinearRegression.LinearRegression.</code><code class="descname">LinearRegression</code><span class="sig-paren">(</span><em>draw</em>, <em>output</em>, <em>incremental=True</em>, <em>alpha=0.01</em>, <em>figsize=(15</em>, <em>8)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/LinearRegression/LinearRegression.html#LinearRegression"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.LinearRegression.LinearRegression.LinearRegression" title="Permalink to this definition">¶</a></dt>
-<dd><p class="rubric">Methods</p>
+<dt id="STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream.LinearRegressionStream">
+<em class="property">class </em><code class="descclassname">STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream.</code><code class="descname">LinearRegressionStream</code><span class="sig-paren">(</span><em>draw</em>, <em>output</em>, <em>incremental=True</em>, <em>alpha=0.01</em>, <em>figsize=(15</em>, <em>8)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/LinearRegression/LinearRegressionStream.html#LinearRegressionStream"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream.LinearRegressionStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper class for linear regression.</p>
+<p>This class provides train and predict functions for using linear regression
+with <cite>Stream_Learn</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>draw</strong> : boolean</p>
+<blockquote>
+<div><p>Describes whether the data is to be plotted (data must have 2 or less
+dimensions).</p>
+</div></blockquote>
+<p><strong>output</strong> : boolean</p>
+<blockquote>
+<div><p>Describes whether debug info is to be printed. Info includes average
+error and current error.</p>
+</div></blockquote>
+<p><strong>incremental</strong> : boolean, optional</p>
+<blockquote>
+<div><p>Describes whether the linear regression algorithm is run incrementally
+or not (the default is True). If incremental, then the algorithm uses
+incremental calculations for matrix inversion and matrix multiplication
+if the data has 1 feature, or stochastic gradient descent if the data
+has more than 1 feature. Otherwise, the algorithm uses linear algebra.</p>
+</div></blockquote>
+<p><strong>alpha</strong> : float, optional</p>
+<blockquote>
+<div><p>Learning rate for stochastic gradient descent (the default is 0.01).
+Ignored if incremental is False or if incremental is True and data has
+1 feature.</p>
+</div></blockquote>
+<p><strong>figsize</strong> : tuple, optional</p>
+<blockquote class="last">
+<div><p>A tuple containing the width and height of the plot for the map (the
+default is (15, 8)).</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>train</td>
+<td>(function) The train function with signature as required by <cite>Stream_Learn</cite>.</td>
+</tr>
+<tr class="row-even"><td>predict</td>
+<td>(function) The predict function with signature as required by <cite>Stream_Learn</cite>.</td>
+</tr>
+<tr class="row-odd"><td>w</td>
+<td>(tuple) The learned weight vector.</td>
+</tr>
+<tr class="row-even"><td>avg_error</td>
+<td>(float) The average error per window of data trained.</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
 <table border="1" class="longtable docutils">
 <colgroup>
 <col width="10%" />
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#STREAMS_CODE.Framework.LinearRegression.LinearRegression.LinearRegression.init_func" title="STREAMS_CODE.Framework.LinearRegression.LinearRegression.LinearRegression.init_func"><code class="xref py py-obj docutils literal"><span class="pre">init_func</span></code></a>()</td>
-<td></td>
-</tr>
-<tr class="row-even"><td><a class="reference internal" href="#STREAMS_CODE.Framework.LinearRegression.LinearRegression.LinearRegression.reset" title="STREAMS_CODE.Framework.LinearRegression.LinearRegression.LinearRegression.reset"><code class="xref py py-obj docutils literal"><span class="pre">reset</span></code></a>()</td>
-<td></td>
+<tr class="row-odd"><td><a class="reference internal" href="#STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream.LinearRegressionStream.reset" title="STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream.LinearRegressionStream.reset"><code class="xref py py-obj docutils literal"><span class="pre">reset</span></code></a>()</td>
+<td>Resets the KMeans functions and average values.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
-<dt id="STREAMS_CODE.Framework.LinearRegression.LinearRegression.LinearRegression.init_func">
-<code class="descname">init_func</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/LinearRegression/LinearRegression.html#LinearRegression.init_func"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.LinearRegression.LinearRegression.LinearRegression.init_func" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="STREAMS_CODE.Framework.LinearRegression.LinearRegression.LinearRegression.reset">
-<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/LinearRegression/LinearRegression.html#LinearRegression.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.LinearRegression.LinearRegression.LinearRegression.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream.LinearRegressionStream.reset">
+<code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/LinearRegression/LinearRegressionStream.html#LinearRegressionStream.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream.LinearRegressionStream.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the KMeans functions and average values.</p>
+<p>Resets: train, predict, avg_error</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -133,7 +188,7 @@
   <ul>
 <li><a class="reference internal" href="#">STREAMS_CODE.Framework.LinearRegression package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-STREAMS_CODE.Framework.LinearRegression.LinearRegression">STREAMS_CODE.Framework.LinearRegression.LinearRegression module</a></li>
+<li><a class="reference internal" href="#module-STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream">STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream module</a></li>
 <li><a class="reference internal" href="#module-STREAMS_CODE.Framework.LinearRegression.linear_regression">STREAMS_CODE.Framework.LinearRegression.linear_regression module</a></li>
 <li><a class="reference internal" href="#module-STREAMS_CODE.Framework.LinearRegression">Module contents</a></li>
 </ul>

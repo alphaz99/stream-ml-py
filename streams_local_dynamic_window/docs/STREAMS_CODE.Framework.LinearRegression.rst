@@ -4,10 +4,10 @@ STREAMS_CODE.Framework.LinearRegression package
 Submodules
 ----------
 
-STREAMS_CODE.Framework.LinearRegression.LinearRegression module
----------------------------------------------------------------
+STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream module
+---------------------------------------------------------------------
 
-.. automodule:: STREAMS_CODE.Framework.LinearRegression.LinearRegression
+.. automodule:: STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream
     :members:
     :undoc-members:
     :show-inheritance:

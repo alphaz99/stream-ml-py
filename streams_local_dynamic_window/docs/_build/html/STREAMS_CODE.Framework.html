@@ -70,7 +70,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="STREAMS_CODE.Framework.KMeans.html">STREAMS_CODE.Framework.KMeans package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="STREAMS_CODE.Framework.KMeans.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="STREAMS_CODE.Framework.KMeans.html#module-STREAMS_CODE.Framework.KMeans.KMeansM">STREAMS_CODE.Framework.KMeans.KMeansM module</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="STREAMS_CODE.Framework.KMeans.html#module-STREAMS_CODE.Framework.KMeans.KMeansStream">STREAMS_CODE.Framework.KMeans.KMeansStream module</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="STREAMS_CODE.Framework.KMeans.html#module-STREAMS_CODE.Framework.KMeans.kmeans">STREAMS_CODE.Framework.KMeans.kmeans module</a></li>
@@ -79,7 +79,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="STREAMS_CODE.Framework.LinearRegression.html">STREAMS_CODE.Framework.LinearRegression package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="STREAMS_CODE.Framework.LinearRegression.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="STREAMS_CODE.Framework.LinearRegression.html#module-STREAMS_CODE.Framework.LinearRegression.LinearRegression">STREAMS_CODE.Framework.LinearRegression.LinearRegression module</a><ul class="simple">
+<li class="toctree-l2"><a class="reference internal" href="STREAMS_CODE.Framework.LinearRegression.html#module-STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream">STREAMS_CODE.Framework.LinearRegression.LinearRegressionStream module</a><ul class="simple">
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="STREAMS_CODE.Framework.LinearRegression.html#module-STREAMS_CODE.Framework.LinearRegression.linear_regression">STREAMS_CODE.Framework.LinearRegression.linear_regression module</a></li>
@@ -225,22 +225,45 @@ values as defined in description for <cite>train_func</cite>.</p>
 </colgroup>
 <tbody valign="top">
 <tr class="row-odd"><td><a class="reference internal" href="#STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.reset" title="STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.reset"><code class="xref py py-obj docutils literal"><span class="pre">reset</span></code></a>()</td>
-<td></td>
+<td>Resets the training window to <cite>min_window_size</cite>.</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.run" title="STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.run"><code class="xref py py-obj docutils literal"><span class="pre">run</span></code></a>()</td>
-<td></td>
+<td>Runs the framework and returns a <cite>Stream</cite> of outputs.</td>
 </tr>
 </tbody>
 </table>
 <dl class="method">
 <dt id="STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.reset">
 <code class="descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/Stream_Learn.html#Stream_Learn.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Resets the training window to <cite>min_window_size</cite>.</p>
+<p>This function resets the training window to <cite>min_window_size</cite>. After
+resetting, the window has the last <cite>min_window_size</cite> points in the
+<cite>Stream</cite> <cite>x_train</cite>. For example, if <cite>max_window_size</cite> is 100,
+<cite>min_window_size</cite> is 2, and the window contains points [1, 100],
+after resetting the window contains points [98, 99].</p>
+<p class="rubric">Notes</p>
+<p>If reset() is called before the window has reached <cite>max_window_size</cite>,
+the window will continue increasing in size until it reaches
+<cite>max_window_size</cite>. Then, the window will reset to <cite>min_window_size</cite>.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/Stream_Learn.html#Stream_Learn.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.Stream_Learn.Stream_Learn.run" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Runs the framework and returns a <cite>Stream</cite> of outputs.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>y_predict</strong> : <cite>Stream</cite></p>
+<blockquote class="last">
+<div><p>A <cite>Stream</cite> containing outputs as returned by <cite>predict_func</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
