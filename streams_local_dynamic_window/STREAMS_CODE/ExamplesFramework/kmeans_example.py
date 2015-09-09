@@ -25,7 +25,7 @@ if __name__ == "__main__":
 
     i = 0
     centroids = kmeans.initialize(num_centroids)
-    m = KMeans.KMeans(draw=draw, output=output, k=k)
+    m = KMeans.KMeansStream(draw=draw, output=output, k=k)
     x = Stream('x')
 
     model = Stream_Learn(data_train=x, data_out=x, train_func=m.train,

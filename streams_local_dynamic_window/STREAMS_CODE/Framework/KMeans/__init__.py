@@ -1,1 +1,1 @@
-from KMeansM import KMeans
+from KMeansStream import KMeansStream

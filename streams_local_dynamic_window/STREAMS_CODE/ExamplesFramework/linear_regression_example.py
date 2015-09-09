@@ -35,7 +35,7 @@ if __name__ == "__main__":
     w = np.random.rand(num_features + 1, 1) * 2 - 1
     w *= 5
 
-    m = LinearRegression.LinearRegression(draw=False, output=output,
+    m = LinearRegression.LinearRegressionStream(draw=False, output=output,
                                           alpha=0.001)
 
     x = Stream('x')

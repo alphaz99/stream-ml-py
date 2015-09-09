@@ -98,9 +98,9 @@ def plotKMeans(X, centroids, previous, index, k):
     plt.draw()
 
 
-def init_plot():
+def init_plot(figsize=(15, 8)):
     plt.ion()
-    f = plt.figure(figsize=(15, 8))
+    f = plt.figure(figsize=figsize)
     plt.show()
 
 

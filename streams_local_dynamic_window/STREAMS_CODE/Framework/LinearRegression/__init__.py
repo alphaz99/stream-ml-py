@@ -1,1 +1,1 @@
-from LinearRegression import LinearRegression
+from LinearRegressionStream import LinearRegressionStream
