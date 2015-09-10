@@ -24,7 +24,7 @@ num_points = 15000
 if __name__ == "__main__":
 
     i = 0
-    centroids = kmeans.initialize(num_centroids)
+    centroids = kmeans.initialize(num_centroids, -5, 5)
     m = KMeans.KMeansStream(draw=draw, output=output, k=k)
     x = Stream('x')
 
