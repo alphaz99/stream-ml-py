@@ -300,7 +300,7 @@ def evaluate_error(X, centroids, index):
 
     Returns
     -------
-    int
+    float
         The mean squared error.
 
     Notes

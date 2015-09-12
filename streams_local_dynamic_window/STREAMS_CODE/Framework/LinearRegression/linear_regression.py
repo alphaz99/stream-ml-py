@@ -3,8 +3,29 @@ import matplotlib.pyplot as plt
 import math
 
 
-# Stochastic gradient descent - linear regression
-def train_sgd(X, y, alpha, w, draw=False):
+def train_sgd(X, y, alpha, w=None):
+    """Trains a linear regression model using stochastic gradient descent.
+
+    Parameters
+    ----------
+    X : numpy.ndarray
+        Numpy array of data
+    y : numpy.ndarray
+        Numpy array of outputs. Dimensions are n * 1, where n is the number of rows
+        in `X`.
+    alpha : float
+        Describes the learning rate.
+    w : numpy.ndarray, optional
+        The initial w vector (the default is zero).
+
+    Returns
+    -------
+    w : numpy.ndarray
+        Trained vector with dimensions (m + 1) * 1, where m is the number of
+        columns in `X`.
+
+    """
+
     X_b = np.hstack((np.ones((X.shape[0], 1)), X))
 
     previous_error = -1
@@ -12,6 +33,9 @@ def train_sgd(X, y, alpha, w, draw=False):
 
     stop = False
     num_iters = 0
+
+    if w is None:
+        w = np.zeros((x.shape[1] + 1, 1))
 
     while not stop:
         for i in range(0, len(X)):
@@ -30,14 +54,27 @@ def train_sgd(X, y, alpha, w, draw=False):
             previous_error = error
             num_iters += 1
 
-    if draw:
-        plot(X, y, w)
-
     return w
 
 
-# Matrix linear regression
-def train(X, y, draw=False):
+def train(X, y):
+    """Trains a linear regression model using linear algebra.
+
+    Parameters
+    ----------
+    X : numpy.ndarray
+        Numpy array of data
+    y : numpy.ndarray
+        Numpy array of outputs. Dimensions are n * 1, where n is the number of rows
+        in `X`.
+
+    Returns
+    -------
+    w : numpy.ndarray
+        Trained vector with dimensions (m + 1) * 1, where m is the number of
+        columns in `X`.
+
+    """
 
     # Add bias term
     X_b = np.hstack((np.ones((X.shape[0], 1)), X))
@@ -49,14 +86,24 @@ def train(X, y, draw=False):
     # Compute w
     w = X_inverse.dot(y)
 
-    if draw:
-        plot(X, y, w)
-
     return w
 
 
 # Plot data
 def plot(X, y, w):
+    """Plot X data, the actual y output, and the prediction line.
+
+    Parameters
+    ----------
+    X : numpy.ndarray
+        Numpy array of data with 1 column.
+    y : numpy.ndarray
+        Numpy array of outputs. Dimensions are n * 1, where n is the number of
+        rows in `X`.
+    w : numpy.ndarray
+        Numpy array with dimensions 2 * 1.
+
+    """
 
     X_b = np.hstack((np.ones((X.shape[0], 1)), X))
 
@@ -68,13 +115,39 @@ def plot(X, y, w):
 
 
 def init_plot(figsize=(15, 8)):
+    """Initializes the plot.
+
+    Parameters
+    ----------
+    figsize : tuple, optional
+        A tuple containing the width and height of the plot (the default is
+        (15, 8)).
+
+    """
     plt.ion()
     f = plt.figure(figsize=figsize)
     plt.show()
 
 
-# Get error
 def evaluate_error(X, y, w):
+    """Returns the mean squared error.
+
+    X : numpy.ndarray
+        Numpy array of data.
+    y : numpy.ndarray
+        Numpy array of outputs. Dimensions are n * 1, where n is the number of
+        rows in `X`.
+    w : numpy.ndarray
+        Numpy array with dimensions (m + 1) * 1, where m is the number of
+        columns in `X`.
+
+    Returns
+    -------
+    float
+        The mean squared error
+
+    """
+
     X_b = np.hstack((np.ones((X.shape[0], 1)), X))
 
     y_predict = X_b.dot(w)
@@ -85,5 +158,21 @@ def evaluate_error(X, y, w):
 
 
 def predict(X, w):
+    """Returns the prediction for one data point.
+
+    Parameters
+    ----------
+    X : numpy.ndarray
+        Numpy array of data
+    w : numpy.ndarray
+        Numpy array with dimensions (m + 1) * 1, where m is the number of
+        columns in `X`.
+
+    Returns
+    -------
+    float
+        The mean squared error
+
+    """
     X_b = np.hstack((np.ones((X.shape[0], 1)), X))
     return X_b.dot(w)
