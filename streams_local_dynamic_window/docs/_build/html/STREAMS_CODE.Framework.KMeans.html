@@ -143,57 +143,348 @@ default is (15, 8)).</p>
 <dl class="function">
 <dt id="STREAMS_CODE.Framework.KMeans.kmeans.computeCentroids">
 <code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">computeCentroids</code><span class="sig-paren">(</span><em>X</em>, <em>index</em>, <em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#computeCentroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.computeCentroids" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Finds the centroids for the data given the index of the closest centroid
+for each data point.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with dimensions n * 2 for some integer n.</p>
+</div></blockquote>
+<p><strong>index</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with dimensions n * 1 that describes the closest centroid
+to each point in <cite>X</cite>.</p>
+</div></blockquote>
+<p><strong>k</strong> : int</p>
+<blockquote>
+<div><p>Describes the number of centroids. k - 1 is the maximum value that
+appears in <cite>index</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>centroids</strong> : numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A numpy array with dimensions <cite>k</cite> * 2.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The centroids are computed by taking the mean of each group of points in
+<cite>X</cite> with the same index value. For i in [0, k), centroids[i] is the mean
+of all data points X[j] where index[j] is i.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="STREAMS_CODE.Framework.KMeans.kmeans.evaluate_error">
 <code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">evaluate_error</code><span class="sig-paren">(</span><em>X</em>, <em>centroids</em>, <em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#evaluate_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.evaluate_error" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns the mean squared error.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with 2 columns.</p>
+</div></blockquote>
+<p><strong>centroids</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with 2 columns.</p>
+</div></blockquote>
+<p><strong>index</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with 1 column.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float</p>
+<blockquote class="last">
+<div><p>The mean squared error.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>The mean squared error is calculated as the average squared distance of
+each point from the closest centroid.</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="STREAMS_CODE.Framework.KMeans.kmeans.findClosestCentroids">
 <code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">findClosestCentroids</code><span class="sig-paren">(</span><em>X</em>, <em>centroids</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#findClosestCentroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.findClosestCentroids" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a numpy array containing the index of the closest centroid for
+each point in X.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with 2 columns.</p>
+</div></blockquote>
+<p><strong>centroids</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with 2 columns.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>index</strong> : numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A numpy array with dimensions n * 1, where n is the number of rows in
+<cite>X</cite>. For each row i in <cite>index</cite>, index[i] is in [0, k) where k is the
+number of rows in <cite>centroids</cite>.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="STREAMS_CODE.Framework.KMeans.kmeans.init_plot">
 <code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">init_plot</code><span class="sig-paren">(</span><em>figsize=(15</em>, <em>8)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#init_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.init_plot" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initializes the plot.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>figsize</strong> : tuple, optional</p>
+<blockquote class="last">
+<div><p>A tuple containing the width and height of the plot (the default is
+(15, 8)).</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="STREAMS_CODE.Framework.KMeans.kmeans.initialize">
-<code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">initialize</code><span class="sig-paren">(</span><em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.initialize" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">initialize</code><span class="sig-paren">(</span><em>k</em>, <em>low</em>, <em>high</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.initialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns k random points with x and y coordinates in [low, high).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>k</strong> : int</p>
+<blockquote>
+<div><p>The number of points to return.</p>
+</div></blockquote>
+<p><strong>low</strong> : int</p>
+<blockquote>
+<div><p>The lower bound (inclusive) for a point.</p>
+</div></blockquote>
+<p><strong>high</strong> : int</p>
+<blockquote>
+<div><p>The upper bound (exclusive) for a point.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>centroids</strong> : numpy.ndarray</p>
+<blockquote class="last">
+<div><p>Numpy array with dimensions <cite>k</cite> by 2.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="STREAMS_CODE.Framework.KMeans.kmeans.initializeCentroids">
 <code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">initializeCentroids</code><span class="sig-paren">(</span><em>X</em>, <em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#initializeCentroids"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.initializeCentroids" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns k random points from the data <cite>X</cite> without replacement.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with dimensions n * 2, where n &gt;= <cite>k</cite>.</p>
+</div></blockquote>
+<p><strong>k</strong> : int</p>
+<blockquote>
+<div><p>The number of points to return</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">numpy.ndarray</p>
+<blockquote class="last">
+<div><p>Numpy array with dimensions <cite>k</cite> by 2.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="STREAMS_CODE.Framework.KMeans.kmeans.initializeData">
-<code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">initializeData</code><span class="sig-paren">(</span><em>n</em>, <em>k</em>, <em>scale</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#initializeData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.initializeData" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">initializeData</code><span class="sig-paren">(</span><em>n</em>, <em>k</em>, <em>scale</em>, <em>low</em>, <em>high</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#initializeData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.initializeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize n points around k random centroids each with a normal
+distribution and scale.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n</strong> : int</p>
+<blockquote>
+<div><p>Describes the numbe of points to make around each centroid.</p>
+</div></blockquote>
+<p><strong>k</strong> : int</p>
+<blockquote>
+<div><p>Describes the number of centroids.</p>
+</div></blockquote>
+<p><strong>scale</strong> : int</p>
+<blockquote>
+<div><p>Describes the scale for the distribution.</p>
+</div></blockquote>
+<p><strong>low</strong> : int</p>
+<blockquote>
+<div><p>The lower bound (inclusive) for a centroid.</p>
+</div></blockquote>
+<p><strong>high</strong> : int</p>
+<blockquote>
+<div><p>The upper bound (exclusive) for a centroid.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> : numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A numpy array with dimensions (<cite>n</cite> * <cite>k</cite>) * 2.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="STREAMS_CODE.Framework.KMeans.kmeans.initializeDataCenter">
 <code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">initializeDataCenter</code><span class="sig-paren">(</span><em>centroid</em>, <em>scale</em>, <em>n</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#initializeDataCenter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.initializeDataCenter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize n points with a normal distribution and scale around a
+centroid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>centroid</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>Numpy array with dimensions 1 * 2.</p>
+</div></blockquote>
+<p><strong>scale</strong> : int</p>
+<blockquote>
+<div><p>Describes the scale for the distribution.</p>
+</div></blockquote>
+<p><strong>n</strong> : int</p>
+<blockquote>
+<div><p>Describes the number of points to make.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X</strong> : numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A numpy array with dimensions <cite>n</cite> * 2.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="STREAMS_CODE.Framework.KMeans.kmeans.kmeans">
 <code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">kmeans</code><span class="sig-paren">(</span><em>X</em>, <em>k</em>, <em>initial_centroids=None</em>, <em>draw=False</em>, <em>output=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#kmeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.kmeans" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="STREAMS_CODE.Framework.KMeans.kmeans.plotData">
-<code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">plotData</code><span class="sig-paren">(</span><em>X</em>, <em>index</em>, <em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#plotData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.plotData" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Runs kmeans until clusters stop moving.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with 2 columns.</p>
+</div></blockquote>
+<p><strong>k</strong> : int</p>
+<blockquote>
+<div><p>Describes the number of centroids.</p>
+</div></blockquote>
+<p><strong>initial_centroids</strong> : numpy.ndarray, optional</p>
+<blockquote>
+<div><p>A numpy array with initial centroids to run the algorithm. This array
+has with dimensions <cite>k</cite> * 2. If not provided, algorithm is initialized
+with random centroids from the data <cite>X</cite>.</p>
+</div></blockquote>
+<p><strong>draw</strong> : boolean, optional</p>
+<blockquote>
+<div><p>Describes whether the data is to be plotted (data must have 2 or less
+dimensions). The default is False.</p>
+</div></blockquote>
+<p><strong>output</strong> : boolean, optional</p>
+<blockquote>
+<div><p>Describes whether debug info is to be printed (the default is False).
+Info includes current number of iterations and number of changed points
+over time.</p>
+</div></blockquote>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>centroids</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>Numpy array with learned centroids (dimensions are <cite>k</cite> * 2).</p>
+</div></blockquote>
+<p><strong>index</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>Numpy array with dimensions n * 1, where n is the number of rows in
+<cite>X</cite>. Each value describes the closest centroid to each data point in
+<cite>X</cite>.</p>
+</div></blockquote>
+<p><strong>num_iters</strong> : int</p>
+<blockquote class="last">
+<div><p>Describes the number of iterations taken to run kmeans.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="STREAMS_CODE.Framework.KMeans.kmeans.plotKMeans">
-<code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">plotKMeans</code><span class="sig-paren">(</span><em>X</em>, <em>centroids</em>, <em>previous</em>, <em>index</em>, <em>k</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#plotKMeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.plotKMeans" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descclassname">STREAMS_CODE.Framework.KMeans.kmeans.</code><code class="descname">plotKMeans</code><span class="sig-paren">(</span><em>X</em>, <em>centroids</em>, <em>previous</em>, <em>index</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/STREAMS_CODE/Framework/KMeans/kmeans.html#plotKMeans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#STREAMS_CODE.Framework.KMeans.kmeans.plotKMeans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the data and centroids.</p>
+<p>This function plots the data with the current centroids and shows the
+movement of the centroids.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>X</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with 2 columns.</p>
+</div></blockquote>
+<p><strong>centroids</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with 2 columns.</p>
+</div></blockquote>
+<p><strong>previous</strong> : numpy.ndarray</p>
+<blockquote>
+<div><p>A numpy array with 2 columns and the same number of rows as
+<cite>centroids</cite>.</p>
+</div></blockquote>
+<p><strong>index</strong> : numpy.ndarray</p>
+<blockquote class="last">
+<div><p>A numpy array with 1 column.</p>
+</div></blockquote>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-STREAMS_CODE.Framework.KMeans">

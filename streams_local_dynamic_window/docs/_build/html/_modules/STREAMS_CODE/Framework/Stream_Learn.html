@@ -181,6 +181,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="bp">None</span>
 
     <span class="k">def</span> <span class="nf">_filter_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+        <span class="c"># If filter_func is provided and the model has been trained</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
                 <span class="p">[</span><span class="n">train_data</span><span class="p">,</span> <span class="n">data</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_func</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
@@ -191,6 +192,7 @@
             <span class="k">if</span> <span class="n">train_data</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">x_train</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">data</span><span class="p">])</span>
 
+        <span class="c"># filter_func is None or the model is not trained</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">x_train</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">n</span><span class="p">])</span>
 
@@ -252,16 +254,22 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_init_streams</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="s">&#39;model&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">all_stream</span> <span class="o">=</span> <span class="n">Stream</span><span class="p">(</span><span class="s">&#39;all&#39;</span><span class="p">)</span>
+
+        <span class="c"># Continual learning</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">,</span> <span class="n">Stream</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stream_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stream_train</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">x_train</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">stream_all</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">)</span>
+
+        <span class="c"># Batch learning with numpy array</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
             <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">]</span>
             <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_features</span><span class="p">:]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="bp">True</span>
+
+        <span class="c"># Batch learning</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_func</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data_train</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trained</span> <span class="o">=</span> <span class="bp">True</span>

@@ -60,8 +60,8 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    draw : boolean</span>
-<span class="sd">        Describes whether the data is to be plotted (data must have 2 or less</span>
-<span class="sd">        dimensions).</span>
+<span class="sd">        Describes whether the data is to be plotted (data must have 1</span>
+<span class="sd">        dimension).</span>
 <span class="sd">    output : boolean</span>
 <span class="sd">        Describes whether debug info is to be printed. Info includes average</span>
 <span class="sd">        error and current error.</span>
@@ -176,7 +176,9 @@
                             <span class="n">model</span><span class="o">.</span><span class="n">xx_sum</span> <span class="o">-=</span> <span class="n">x_value</span> <span class="o">**</span> <span class="mi">2</span>
 
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">model</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">train_sgd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">w</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">)</span>
+                    <span class="n">model</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">train_sgd</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">alpha</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">:</span>
+                        <span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">w</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">w</span>
                 <span class="n">error</span> <span class="o">=</span> <span class="n">evaluate_error</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">w</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
