@@ -132,6 +132,7 @@ class Stream_Learn:
         self.state = None
 
     def _filter_f(self, n):
+        # If filter_func is provided and the model has been trained
         if self.trained and self.filter_func is not None:
             if not isinstance(n, tuple):
                 [train_data, data] = self.filter_func(n, None, self.model)
@@ -142,6 +143,7 @@ class Stream_Learn:
             if train_data:
                 self.x_train.extend([data])
 
+        # filter_func is None or the model is not trained
         else:
             self.x_train.extend([n])
 
@@ -203,16 +205,22 @@ class Stream_Learn:
         self._init_streams()
         self.model_stream = Stream('model')
         self.all_stream = Stream('all')
+
+        # Continual learning
         if isinstance(self.data_train, Stream):
             self.stream_filter(self.data_train)
             self.stream_train(inputs=self.x_train)
             if self.all_func is not None:
                 self.stream_all(inputs=self.data_train)
+
+        # Batch learning with numpy array
         elif isinstance(self.data_train, np.ndarray):
             x = self.data_train[:, 0:self.num_features]
             y = self.data_train[:, self.num_features:]
             self.model = self.train_func(x, y, None)
             self.trained = True
+
+        # Batch learning
         else:
             self.model = self.train_func(self.data_train, None, None)
             self.trained = True
