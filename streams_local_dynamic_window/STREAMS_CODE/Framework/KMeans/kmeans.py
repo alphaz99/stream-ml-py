@@ -145,8 +145,10 @@ def kmeans(X, k, initial_centroids=None, draw=False, output=False):
     """
 
     num_iters = 0
+    # Use initial centroids if provided
     if initial_centroids is not None:
         centroids = initial_centroids
+    # Set initial centroids to random
     else:
         centroids = initializeCentroids(X, k)
 
@@ -156,9 +158,12 @@ def kmeans(X, k, initial_centroids=None, draw=False, output=False):
 
     while True:
         index = findClosestCentroids(X, centroids)
+        # If no points have been reassigned, the centroids will not move and we
+        # are done
         if np.array_equal(index, previous_index):
             break
 
+        # Print number of points reassigned
         if num_iters != 0 and output:
             print np.count_nonzero(index - previous_index),\
                 " data points changed color"
