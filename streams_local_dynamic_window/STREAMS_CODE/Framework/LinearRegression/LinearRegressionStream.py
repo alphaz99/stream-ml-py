@@ -64,11 +64,13 @@ class LinearRegressionStream:
                 current_window_size = window_state[0]
                 max_window_size = window_state[4]
 
+                # Initialize model if not initialized
                 if not model:
                     class Model:
                         w = np.zeros((x.shape[1] + 1, 1))
                         sum_error = 0
                         i = 0
+                        # Use incremental matrix state if data has 1 feature
                         if x.shape[1] == 1:
                             x_sum = 0
                             y_sum = 0
@@ -76,12 +78,17 @@ class LinearRegressionStream:
                             xx_sum = 0
                     model = Model()
 
+                    # Set incremental matrix state if data has 1 feature
                     if x.shape[1] == 1:
                         model.x_sum = np.sum(x)
                         model.y_sum = np.sum(y)
                         model.xy_sum = np.sum(x * y)
                         model.xx_sum = np.sum(x ** 2)
 
+                # Model is already initialized
+
+                # If data has 1 feature, add last step_size points from
+                # sums
                 elif x.shape[1] == 1:
                     for i in range(-step_size, 0):
                         x_value = x[i].tolist()[0]
@@ -91,6 +98,7 @@ class LinearRegressionStream:
                         model.xy_sum += x_value * y_value
                         model.xx_sum += x_value ** 2
 
+                # If data has 1 feature, compute w with incremental matrix
                 if x.shape[1] == 1:
 
                     n = x.shape[0]
@@ -105,6 +113,9 @@ class LinearRegressionStream:
                     if self.draw:
                         plot(x, y, model.w)
 
+                    # If the window has not reached steady state and the next
+                    # window will be at steady state, remove points to
+                    # correctly update the sums
                     if (max_window_size - current_window_size < step_size and
                             not window_state[1]):
                         for i in range(0, step_size - (max_window_size -
@@ -116,6 +127,8 @@ class LinearRegressionStream:
                             model.xy_sum -= x_value * y_value
                             model.xx_sum -= x_value ** 2
 
+                    # If the window has reached steady state, remove the first
+                    # step size points from sums
                     if window_state[1]:
 
                         for i in range(0, step_size):
@@ -126,6 +139,7 @@ class LinearRegressionStream:
                             model.xy_sum -= x_value * y_value
                             model.xx_sum -= x_value ** 2
 
+                # The data has more than 1 feature, train using SGD
                 else:
                     model.w = train_sgd(x, y, self.alpha, model.w)
                     if self.draw:
@@ -139,6 +153,7 @@ class LinearRegressionStream:
                 model.i += 1
                 return model
 
+        # Non-incremental training
         else:
             def train_function(x, y, model, window_state):
                 if not model:

@@ -149,9 +149,7 @@ def evaluate_error(X, y, w):
     """
 
     X_b = np.hstack((np.ones((X.shape[0], 1)), X))
-
     y_predict = X_b.dot(w)
-
     dist = (y - y_predict) ** 2
 
     return float(np.sum(dist)) / X.shape[0]
