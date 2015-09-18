@@ -4,8 +4,8 @@ if __name__ == '__main__':
         from os import path
         sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-from Framework import Stream_Learn, KMeans, Geomap
-from Framework.KMeans import kmeans
+from Learn import Stream_Learn, KMeans, Geomap
+from Learn.KMeans import kmeans
 from Stream import Stream
 
 import requests
@@ -22,7 +22,7 @@ def all_func(x, y, model, state, window_state):
 
 x = Stream('x')
 
-m = KMeans.KMeans(draw = False, output = False, k = 5)
+m = KMeans.KMeansStream(draw = False, output = False, k = 5)
 model = Stream_Learn(x, x, m.train, m.predict, 5, 30, 1, 2, all_func = all_func)
 
 y = model.run()

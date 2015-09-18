@@ -7,8 +7,8 @@ if __name__ == '__main__':
 
 from Stream import Stream
 from Operators import stream_func
-from Framework import Stream_Learn, LinearRegression
-from Framework.LinearRegression import linear_regression
+from Learn import Stream_Learn, LinearRegression
+from Learn.LinearRegression import linear_regression
 import numpy as np
 
 # Parameters
