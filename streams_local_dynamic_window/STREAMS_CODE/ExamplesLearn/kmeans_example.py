@@ -19,6 +19,7 @@ num_centroids = 5
 k = 5
 max_window_size = 1000
 num_points = 15000
+step_size = 1
 
 
 if __name__ == "__main__":
@@ -30,7 +31,7 @@ if __name__ == "__main__":
 
     model = Stream_Learn(data_train=x, data_out=x, train_func=m.train,
                          predict_func=m.predict, min_window_size=k,
-                         max_window_size=max_window_size, step_size=1,
+                         max_window_size=max_window_size, step_size=step_size,
                          num_features=2)
     y = model.run()
 

@@ -10,7 +10,7 @@ from Operators import stream_func
 from Learn import Stream_Learn, LinearRegression
 from Learn.LinearRegression import linear_regression
 import numpy as np
-
+import pdb
 # Parameters
 
 draw = True
@@ -19,6 +19,7 @@ num_features = 1
 min_window_size = 2
 max_window_size = 50
 num_points = 1000
+step_size = 1
 
 
 def print_stream(y):
@@ -44,10 +45,10 @@ if __name__ == "__main__":
     model = Stream_Learn(data_train=x, data_out=x, train_func=m.train,
                          predict_func=m.predict,
                          min_window_size=min_window_size,
-                         max_window_size=max_window_size, step_size=1,
+                         max_window_size=max_window_size, step_size=step_size,
                          num_features=num_features, all_func=all_func)
     y = model.run()
-
+    pdb.set_trace()
     stream_func(inputs=y, f=print_stream, f_type='element', num_outputs=0)
 
     while i < num_points:
