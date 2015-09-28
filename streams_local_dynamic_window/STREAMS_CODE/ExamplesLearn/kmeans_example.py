@@ -6,9 +6,9 @@ if __name__ == '__main__':
 
 
 from Stream import Stream
-from Learn import Stream_Learn
-from Learn import KMeans
-from Learn.KMeans import kmeans
+from ML import Stream_Learn
+from ML import KMeans
+from ML.KMeans import kmeans
 import numpy as np
 
 # Parameters

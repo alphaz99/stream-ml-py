@@ -4,8 +4,8 @@ if __name__ == '__main__':
         from os import path
         sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-from Learn import Stream_Learn, KMeans, Geomap
-from Learn.KMeans import kmeans
+from ML import Stream_Learn, KMeans, Geomap
+from ML.KMeans import kmeans
 from Stream import Stream
 
 import requests

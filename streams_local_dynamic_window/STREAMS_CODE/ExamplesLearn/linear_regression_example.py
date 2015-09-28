@@ -7,10 +7,9 @@ if __name__ == '__main__':
 
 from Stream import Stream
 from Operators import stream_func
-from Learn import Stream_Learn, LinearRegression
-from Learn.LinearRegression import linear_regression
+from ML import Stream_Learn, LinearRegression
+from ML.LinearRegression import linear_regression
 import numpy as np
-import pdb
 # Parameters
 
 draw = True
@@ -48,7 +47,6 @@ if __name__ == "__main__":
                          max_window_size=max_window_size, step_size=step_size,
                          num_features=num_features, all_func=all_func)
     y = model.run()
-    pdb.set_trace()
     stream_func(inputs=y, f=print_stream, f_type='element', num_outputs=0)
 
     while i < num_points:
