@@ -30,7 +30,6 @@ def print_stream(y):
 if __name__ == "__main__":
 
     i = 0
-
     x = np.zeros((100, 2))
 
     for i in range(0, 100):

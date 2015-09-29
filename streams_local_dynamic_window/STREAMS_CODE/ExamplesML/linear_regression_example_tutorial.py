@@ -32,7 +32,6 @@ if __name__ == "__main__":
 
     x = Stream('x')
 
-    linear_regression.init_plot()
     model = Stream_Learn(data_train=x, data_out=x, train_func=m.train,
                          predict_func=m.predict,
                          min_window_size=min_window_size,
@@ -41,7 +40,6 @@ if __name__ == "__main__":
     y = model.run()
 
     while i < num_points:
-        z = np.random.rand(num_features + 1, 1) * 2 - 1
         w[1] += 0.01
         x_value = np.ones((1, num_features)) * i
         x_b = np.hstack((np.ones((1, 1)), x_value)).transpose()
@@ -49,9 +47,6 @@ if __name__ == "__main__":
         values = x_value.tolist()[0]
         values.append(y_value)
         x.extend([tuple(values)])
-
-        if i % 100 == 0 and i != 0:
-            model.reset()
 
         print i
         i += 1

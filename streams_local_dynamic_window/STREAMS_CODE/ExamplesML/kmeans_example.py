@@ -21,7 +21,6 @@ max_window_size = 1000
 num_points = 15000
 step_size = 1
 
-
 if __name__ == "__main__":
 
     i = 0
@@ -44,9 +43,6 @@ if __name__ == "__main__":
                                                     1, 1).tolist()[0])])
         print i
         i += 1
-
-        if i % 200 == 0:
-            model.reset()
 
     print "Average number of iterations: ", m.avg_iterations
     print "Average error: ", m.avg_error

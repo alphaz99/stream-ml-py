@@ -24,7 +24,6 @@ step_size = 1
 def print_stream(y):
     print y
 
-
 def all_func(x, y, model, state, window_state):
     if draw and model:
         linear_regression.plot(x, y, model.w)
@@ -50,11 +49,8 @@ if __name__ == "__main__":
     stream_func(inputs=y, f=print_stream, f_type='element', num_outputs=0)
 
     while i < num_points:
-        z = np.random.rand(num_features + 1, 1) * 2 - 1
-        # w += z / 10
         w[1] += 0.01
-        # x_value = np.random.rand(1, num_features) * 2 - 1
-        x_value = np.array([i]).reshape(1, 1)
+        x_value = np.ones((1, num_features)) * i
         x_b = np.hstack((np.ones((1, 1)), x_value)).transpose()
         y_value = w.transpose().dot(x_b)[0][0]
         values = x_value.tolist()[0]
