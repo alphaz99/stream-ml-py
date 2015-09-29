@@ -10,6 +10,7 @@ from Operators import stream_func
 from ML import Stream_Learn, LinearRegression
 from ML.LinearRegression import linear_regression
 import numpy as np
+
 # Parameters
 
 draw = True
@@ -41,10 +42,8 @@ if __name__ == "__main__":
 
     while i < num_points:
         z = np.random.rand(num_features + 1, 1) * 2 - 1
-        # w += z / 10
         w[1] += 0.01
-        # x_value = np.random.rand(1, num_features) * 2 - 1
-        x_value = np.array([i]).reshape(1, 1)
+        x_value = np.ones((1, num_features)) * i
         x_b = np.hstack((np.ones((1, 1)), x_value)).transpose()
         y_value = w.transpose().dot(x_b)[0][0]
         values = x_value.tolist()[0]
