@@ -217,12 +217,12 @@ class Stream_Learn:
         elif isinstance(self.data_train, np.ndarray):
             x = self.data_train[:, 0:self.num_features]
             y = self.data_train[:, self.num_features:]
-            self.model = self.train_func(x, y, None)
+            self.model = self.train_func(x, y, None, None)
             self.trained = True
 
         # Batch learning
         else:
-            self.model = self.train_func(self.data_train, None, None)
+            self.model = self.train_func(self.data_train, None, None, None)
             self.trained = True
 
         y_predict = self.stream_predict(self.data_out)
