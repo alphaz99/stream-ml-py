@@ -24,6 +24,7 @@ step_size = 1
 def print_stream(y):
     print y
 
+
 def all_func(x, y, model, state, window_state):
     if draw and model:
         linear_regression.plot(x, y, model.w)
